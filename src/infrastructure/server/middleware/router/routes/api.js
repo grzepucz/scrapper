@@ -1,7 +1,26 @@
+const SurferJob = require('@application/surfer/SurferJob');
+const { URL } = require('url');
+
+const isUrlValid = (url) => {
+  try {
+    return new URL(url);
+  } catch (error) {
+    return false;
+  }
+};
+
 module.exports = [
   {
     method: 'get',
-    path: '/test',
-    handler: (req, res, next) => res.status(200).json({ hello: 'world' }),
+    path: '/run',
+    handler: (req, res, next) => {
+      const { url } = req.query;
+
+      new SurferJob(isUrlValid(url) && url)
+        .run()
+        .then((payload) => {
+          res.status(200).json(payload);
+        });
+    },
   },
 ];

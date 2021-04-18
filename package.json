@@ -28,8 +28,11 @@
     "express": "^4.17.1",
     "module-alias": "^2.2.2",
     "mongoose": "^5.12.4",
+    "node-fetch": "^2.6.1",
+    "node-schedule": "^2.0.0",
     "node-webhdfs": "^1.0.2",
-    "process": "^0.11.10"
+    "process": "^0.11.10",
+    "raven": "^2.6.4"
   },
   "devDependencies": {
     "eslint": "^7.24.0",
@@ -48,6 +51,7 @@
     "@application": "src/application",
     "@domain": "src/domain",
     "@ui": "src/ui",
-    "@server": "src/infrastructure/server"
+    "@server": "src/infrastructure/server",
+    "@sentry": "src/infrastructure/sentry/Sentry"
   }
 }

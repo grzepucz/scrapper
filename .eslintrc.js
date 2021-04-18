@@ -13,6 +13,9 @@ module.exports = {
   rules: {
     indent: ['error', 2],
     'import/no-unresolved': [1, { caseSensitive: false }],
-    'class-methods-use-this': [1, { exceptMethods: [] }],
+    'class-methods-use-this': [0, { exceptMethods: [] }],
+    'max-len': ['error', {
+      ignoreStrings: true, code: 120, ignoreUrls: true, tabWidth: 2,
+    }],
   },
 };

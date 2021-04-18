@@ -1,11 +1,21 @@
-const http = require('http');
+const fetch = require('node-fetch');
+const Raven = require('raven');
 
 class WebClient {
-    fetch(url) {
-        if (true) { // Checking url validity
-            http.request()
-        }
-    }
+  getPage(url) {
+    return fetch(url)
+      .then((resp) => resp.text())
+      .catch((error) => Raven.captureException(error));
+  }
+
+  getAll(pages) {
+    // const stream = new ReadableStream();
+    return new Promise((resolve) => {
+      pages.forEach((url) => this.getPage(url).then((response) => {
+        console.log(response);
+      }));
+    });
+  }
 }
 
 module.exports = WebClient;
