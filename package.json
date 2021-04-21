@@ -29,6 +29,7 @@
     "module-alias": "^2.2.2",
     "mongoose": "^5.12.4",
     "node-fetch": "^2.6.1",
+    "node-html-parser": "^3.1.5",
     "node-schedule": "^2.0.0",
     "process": "^0.11.10",
     "raven": "^2.6.4",

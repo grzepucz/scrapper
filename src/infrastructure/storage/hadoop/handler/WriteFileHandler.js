@@ -15,22 +15,22 @@ class WriteFileHandler {
      */
   static handle(file) {
     const { targetPath, sourcePath } = file;
-    const options = { stdio: 'inherit' };
 
-    const process = new Promise((resolve, reject) => {
-      this.spawn = spawn(COMMAND, [DFS, OPERATION, sourcePath, `${NAMESPACE}/${targetPath}`], options);
+    const child = new Promise((resolve, reject) => {
+      this.spawn = spawn(COMMAND, [DFS, OPERATION, sourcePath, `${NAMESPACE}/${targetPath}`]);
 
-      this.spawn.on(ERROR_MESSAGE, (code) => {
+      this.spawn.stderr.on(ERROR_MESSAGE, (code) => {
         console.error(code);
         reject(code);
       });
+
       this.spawn.on(EXIT_MESSAGE, (code) => {
         console.log(`HDFS process exited with code: ${code}`);
         resolve(true);
       });
     });
 
-    return process.then(() => file);
+    return child.then(() => file);
   }
 }
 

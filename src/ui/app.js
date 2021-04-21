@@ -5,3 +5,5 @@ require('@sentry')();
 const Scheduler = require('@application/scheduler/SchedulerJob');
 
 const scheduler = new Scheduler();
+
+setInterval(() => scheduler.getJobs(), 60000);

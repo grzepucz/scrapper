@@ -51,13 +51,15 @@ class HadoopFile {
   }
 
   generatePath(fileName) {
-    const slugify = (text) => text.toLowerCase()
-      .replace(/[^a-z0-9 -]/g, '')
+    const slugify = (text) => text.replace(/:/g, '-')
+      .replace('http', '')
+      .replace(/\.+/g, '-')
+      .replace(/[^(a-z0-9) -]/g, '')
       .replace(/\s+/g, '-')
       .replace(/-+/g, '-');
 
     const date = new Date().toJSON().slice(0, 16);
-    return slugify(`${date.replace('T', '')}-${fileName}`);
+    return slugify(`${date.replace('T', '-')}-${fileName}`);
   }
 }
 
