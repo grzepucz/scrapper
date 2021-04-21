@@ -4,17 +4,9 @@ const Raven = require('raven');
 class WebClient {
   getPage(url) {
     return fetch(url)
-      .then((resp) => resp.text())
+      .then((response) => response.text())
+      .then((response) => response)
       .catch((error) => Raven.captureException(error));
-  }
-
-  getAll(pages) {
-    // const stream = new ReadableStream();
-    return new Promise((resolve) => {
-      pages.forEach((url) => this.getPage(url).then((response) => {
-        console.log(response);
-      }));
-    });
   }
 }
 

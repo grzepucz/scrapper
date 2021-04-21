@@ -19,8 +19,20 @@ module.exports = [
       new SurferJob(isUrlValid(url) && url)
         .run()
         .then((payload) => {
-          res.status(200).json(payload);
+          res.status(200).send(payload);
         });
     },
   },
+  // {
+  //   method: 'get',
+  //   path: '/read',
+  //   handler: (req, res, next) => {
+  //     const { path } = req.query;
+  //
+  //     return path && new Promise((resolve) => resolve(new HadoopClient().readFile(path)))
+  //       .then((payload) => {
+  //         res.status(200).send(payload);
+  //       });
+  //   },
+  // },
 ];

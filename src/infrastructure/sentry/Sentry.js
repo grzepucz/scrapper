@@ -2,9 +2,11 @@ const Raven = require('raven');
 const { env } = require('process');
 
 const initSentry = () => new Promise((resolve) => {
-  resolve(Raven.config(env.SENTRY_DSN, {
+  const options = {
     tracesSampleRate: 0.8,
-  }).install());
+  };
+
+  resolve(Raven.config(env.SENTRY_DSN, options).install());
 }).then(() => {
   console.log('Sentry set up.');
 });

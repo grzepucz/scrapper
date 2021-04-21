@@ -13,7 +13,7 @@ const AVAILABLE_JOBS = [SurferJobConfig];
 
 class Scheduler {
   constructor() {
-    this.init();
+    // this.init();
   }
 
   init() {
@@ -24,10 +24,18 @@ class Scheduler {
       nodeSchedule.scheduleJob(name, schedule, () => {
         const job = new ApplicationJob();
         job.run()
-          .then(() => callback && callback())
+          .then((data) => this.runCallback(data, callback) && data)
           .catch((error) => Raven.captureException(error));
       });
     });
+  }
+
+  runCallback(data, callback) {
+    console.log('daaataaa');
+    console.log(data);
+    if (callback && typeof callback === 'function') {
+      callback(data);
+    }
   }
 
   getJobs() {
