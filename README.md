@@ -20,6 +20,7 @@ MONGO_HOST=MongoDB host
 MONGO_PROTOCOL=Mongo protocol
 MONGO_DB=Collection schema name
 SENTRY_DSN=url to sentry dsn
+SENTRY_ON=boolean to use or not use sentry
 PAGE_LOCATION=page to scrap
 PAGE_PARSER=parser schema name
 SURFER_SCHEDULE=cron value to schedule surfer job

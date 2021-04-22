@@ -17,7 +17,7 @@ class ScrapperJob {
         this.hadoopHandler.handle(this.remoteFilePath)
             .then((payload) => this.parser.parseHTML(payload))
             .then((data) => ArticleRepository.saveAll(data))
-            .then(() => console.log('finishing...'));
+            .then(() => console.log('Finished scrapping.'));
     }
 }
 

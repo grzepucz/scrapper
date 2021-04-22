@@ -15,10 +15,11 @@ class SurferJob {
     }
 
     run() {
-        return new Promise((resolve) => resolve(this.client.getPage(this.pageLocation)))
-            .then((response) => new HadoopFile(this.pageLocation, response))
+        const self = this;
+        return new Promise((resolve) => resolve(self.client.getPage(self.pageLocation)))
+            .then((response) => new HadoopFile(self.pageLocation, response))
             .then((file) => file.save())
-            .then((hadoopFile) => this.hadoopHandler.handle(hadoopFile))
+            .then((hadoopFile) => self.hadoopHandler.handle(hadoopFile))
             .then((file) => file.remove())
             .then((file) => new ScrapperJob(file).scrap());
     }
