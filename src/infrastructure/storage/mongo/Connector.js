@@ -8,55 +8,63 @@ const NOT_INIT_CONNECTION_STATUS = 99;
 const ERROR_EVENT = 'error';
 
 class MongoConnection {
-  constructor() {
-    this.mongooseUrl = `mongodb://${env.DOCUMENTDB_USER}:${env.DOCUMENTDB_PASSWORD}@${env.DOCUMENTDB_HOST}/${env.DOCUMENTDB_DATABASE}`;
-    this.connection = null;
-  }
+    constructor() {
+        this.mongooseUrl = `${env.MONGO_PROTOCOL}://${env.MONGO_USER}:${env.MONGO_PASSWORD}@${env.MONGO_HOST}/${env.MONGO_DB}?retryWrites=true&w=majority`;
+        this.connection = null;
+    }
 
-  getConnection() {
-    const state = this.connection?.readyState || 0;
-    const checkConnectionStatus = (status) => (status === DISCONNECTED_STATUS || status === NOT_INIT_CONNECTION_STATUS);
-    const self = this;
+    getCurrentConnectionState() {
+        if (!this.connection) {
+            return DISCONNECTED_STATUS;
+        }
 
-    return new Promise((resolve, reject) => {
-      if (!self.connection || checkConnectionStatus(state)) {
-        self.getConnectionMongo()
-          .then((connection) => {
-            connection.on(ERROR_EVENT, (error) => {
-              Raven.captureException(error);
-              reject(error);
-            });
+        return this.connection.readyState || DISCONNECTED_STATUS;
+    }
 
-            self.connection = connection;
-            resolve(self.connection);
-          })
-          .catch((error) => {
-            Raven.captureException(error);
-            reject(error);
-          });
-      } else {
-        resolve(self.connection);
-      }
-    });
-  }
+    getConnection() {
+        const state = this.getCurrentConnectionState();
+        const checkConnectionStatus = (status) => (status === DISCONNECTED_STATUS || status === NOT_INIT_CONNECTION_STATUS);
+        const self = this;
 
-  getConnectionMongo() {
-    const self = this;
-    return new Promise((resolve, reject) => {
-      mongoose.connect(self.mongooseUrl, {
-        poolSize: 200,
-        useNewUrlParser: true,
-        useUnifiedTopology: true,
-        heartbeatFrequencyMS: 1500,
-        serverSelectionTimeoutMS: 5000,
-      })
-        .then(() => resolve(mongoose.connection))
-        .catch((error) => {
-          Raven.captureException(error);
-          reject(error);
+        return new Promise((resolve, reject) => {
+            if (!self.connection || checkConnectionStatus(state)) {
+                self.getConnectionMongo()
+                    .then((connection) => {
+                        connection.on(ERROR_EVENT, (error) => {
+                            Raven.captureException(error);
+                            reject(error);
+                        });
+
+                        self.connection = connection;
+                        resolve(self.connection);
+                    })
+                    .catch((error) => {
+                        Raven.captureException(error);
+                        reject(error);
+                    });
+            } else {
+                resolve(self.connection);
+            }
         });
-    });
-  }
+    }
+
+    getConnectionMongo() {
+        const self = this;
+        return new Promise((resolve, reject) => {
+            mongoose.connect(self.mongooseUrl, {
+                poolSize: 200,
+                useNewUrlParser: true,
+                useUnifiedTopology: true,
+                heartbeatFrequencyMS: 1500,
+                serverSelectionTimeoutMS: 5000,
+            })
+                .then(() => resolve(mongoose.connection))
+                .catch((error) => {
+                    Raven.captureException(error);
+                    reject(error);
+                });
+        });
+    }
 }
 
 module.exports = new MongoConnection();

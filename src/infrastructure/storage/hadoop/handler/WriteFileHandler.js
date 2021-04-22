@@ -10,28 +10,28 @@ const ERROR_MESSAGE = 'error';
 const EXIT_MESSAGE = 'exit';
 
 class WriteFileHandler {
-  /**
+    /**
      * @param file HadoopFile
      */
-  static handle(file) {
-    const { targetPath, sourcePath } = file;
+    static handle(file) {
+        const { targetPath, sourcePath } = file;
 
-    const child = new Promise((resolve, reject) => {
-      this.spawn = spawn(COMMAND, [DFS, OPERATION, sourcePath, `${NAMESPACE}/${targetPath}`]);
+        const child = new Promise((resolve, reject) => {
+            this.spawn = spawn(COMMAND, [DFS, OPERATION, sourcePath, `${NAMESPACE}/${targetPath}`]);
 
-      this.spawn.stderr.on(ERROR_MESSAGE, (code) => {
-        console.error(code);
-        reject(code);
-      });
+            this.spawn.stderr.on(ERROR_MESSAGE, (code) => {
+                console.error(code);
+                reject(code);
+            });
 
-      this.spawn.on(EXIT_MESSAGE, (code) => {
-        console.log(`HDFS process exited with code: ${code}`);
-        resolve(true);
-      });
-    });
+            this.spawn.on(EXIT_MESSAGE, (code) => {
+                console.log(`HDFS process exited with code: ${code}`);
+                resolve(true);
+            });
+        });
 
-    return child.then(() => file);
-  }
+        return child.then(() => file);
+    }
 }
 
 module.exports = WriteFileHandler;

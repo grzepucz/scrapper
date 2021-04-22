@@ -8,11 +8,11 @@ RUN apt-get update && \
     useradd --uid 10000 --gid scrapper --shell /bin/bash --create-home scrapper && \
     chown -R scrapper:scrapper ./
 
-USER provider
+USER scrapper
 
 COPY package*.json ./
 
-RUN npm install
+RUN mkdir -f _cache && npm install
 
 COPY . .
 

@@ -12,7 +12,7 @@ server.use(express.urlencoded({ extended: false }));
 applyRoutes(server);
 
 server.listen(env.PORT || 3000, () => {
-  console.log(`Server ${env.APP_NAME} run on port: ${env.PORT || 3000}`);
+    console.log(`Server ${env.APP_NAME} run on port: ${env.PORT || 3000}`);
 });
 
 module.exports = server;
