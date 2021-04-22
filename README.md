@@ -5,7 +5,7 @@
 ## Before start
 In order to use hadoop as a storage system it needs to be started first and properly configured. 
 This project stores scrapped web pages into /scrapper directory, so it needs to exist. You can create it by running
-`hdfs dfs -mkdir /scrapper`. 
+`hdfs dfs -mkdir ${env.HDFS_NAMESPACE}`. 
 Fetched pages before being put into hadoop are stored locally inside `_cache` directory so do not delete it. Files inside are deleted right after being stored into hdfs.
 ## Configuration
 Configuration variables are stored inside `.env` file.
