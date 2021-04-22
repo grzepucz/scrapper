@@ -22,6 +22,7 @@ MONGO_DB=Collection schema name
 SENTRY_DSN=url to sentry dsn
 PAGE_LOCATION=page to scrap
 PAGE_PARSER=parser schema name
+SURFER_SCHEDULE=cron value to schedule surfer job
 ```
 ## Parser
 You can add your own parser like it is done in `src/domain/Article/parser/config/config.json` config file. Using pattern from `default` set.

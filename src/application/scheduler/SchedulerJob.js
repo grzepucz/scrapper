@@ -1,11 +1,14 @@
 const nodeSchedule = require('node-schedule');
 const Raven = require('raven');
+const { env } = require('process');
 const SurferJob = require('../surfer/SurferJob');
+
+const DEFAULT_SCHEDULE = '*/5 */12 * * *';
 
 const SurferJobConfig = {
     name: 'Surfer',
     ApplicationJob: SurferJob,
-    schedule: '*/30 * * * *',
+    schedule: env.SURFER_SCHEDULE || DEFAULT_SCHEDULE,
     callback: () => console.log(`Surfer scheduled: ${new Date().toJSON()}`),
 };
 
