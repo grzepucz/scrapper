@@ -10,6 +10,7 @@ const SurferJobConfig = {
     ApplicationJob: SurferJob,
     schedule: env.SURFER_SCHEDULE || DEFAULT_SCHEDULE,
     callback: () => console.log(`Surfer scheduled: ${new Date().toJSON()}`),
+    paginationLimit: 10,
 };
 
 const AVAILABLE_JOBS = [SurferJobConfig];
@@ -22,12 +23,12 @@ class SchedulerJob {
     init() {
         AVAILABLE_JOBS.forEach((config) => {
             const {
-                name, ApplicationJob, schedule, callback,
+                name, ApplicationJob, schedule, callback, paginationLimit,
             } = config;
 
             nodeSchedule.scheduleJob(name, schedule, () => {
                 const job = new ApplicationJob();
-                job.run()
+                job.runWithPagination(paginationLimit)
                     .then((data) => this.runCallback(data, callback) && data)
                     .catch((error) => Raven.captureException(error));
             });

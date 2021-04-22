@@ -34,7 +34,7 @@ class ReadFileHandler {
             });
         });
 
-        return child.then((data) => data && JSON.parse(data));
+        return child.then((data) => data);
     }
 }
 

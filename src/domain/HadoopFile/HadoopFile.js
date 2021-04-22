@@ -8,7 +8,7 @@ class HadoopFile {
     constructor(fileName, data) {
         this.targetPath = this.generatePath(fileName);
         this.sourcePath = `${env.PWD}/${CACHE_DIR_NAME}/${this.targetPath}`;
-        this.data = JSON.stringify(data);
+        this.data = data;
     }
 
     remove() {
