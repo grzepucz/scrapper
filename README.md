@@ -29,6 +29,7 @@ Variables PAGE_PARSER and PAGE_LOCATION needs to be changed afterwards.
 ## Usage
 ```
 cp .env.dist .env
+mkdir _cache
 npm install
 npm start
 ```
