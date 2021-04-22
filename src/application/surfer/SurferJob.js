@@ -4,7 +4,7 @@ const HadoopFile = require('@domain/HadoopFile/HadoopFile');
 const { env } = require('process');
 const ScrapperJob = require('../scrapper/ScrapperJob');
 
-const DEFAULT_PAGE = 'https://www.jbzd.com.pl/';
+const DEFAULT_PAGE = 'https://www.jbzd.com.pl/top/dzien/';
 const HADOOP_OP = 'write';
 
 class SurferJob {
