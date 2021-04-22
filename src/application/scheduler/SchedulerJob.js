@@ -14,7 +14,7 @@ const SurferJobConfig = {
 
 const AVAILABLE_JOBS = [SurferJobConfig];
 
-class Scheduler {
+class SchedulerJob {
     constructor() {
         this.init();
     }
@@ -32,7 +32,7 @@ class Scheduler {
                     .catch((error) => Raven.captureException(error));
             });
 
-            console.log(`Scheduled: ${name}.`);
+            console.log(`Scheduled ${name}: ${schedule}`);
         });
     }
 
@@ -47,4 +47,4 @@ class Scheduler {
     }
 }
 
-module.exports = Scheduler;
+module.exports = new SchedulerJob();
