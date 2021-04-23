@@ -16,11 +16,12 @@
       },
       {
         "field": "url",
-        "selector": "url"
+        "selector": "url",
+        "parse": "addDomainToUrl"
       },
       {
         "field": "thumbnail",
-        "selector": "img_small"
+        "selector": "img_small",
       },
       {
         "field": "subscribersCount",
