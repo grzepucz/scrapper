@@ -25,10 +25,6 @@ PAGE_LOCATION=page to scrap
 PAGE_PARSER=parser schema name
 SURFER_SCHEDULE=cron value to schedule surfer job
 ```
-## Parser
-You can add your own parser like it is done in `src/domain/Article/parser/config/config.json` config file. Using pattern from `default` set.
-Variables PAGE_PARSER and PAGE_LOCATION needs to be changed afterwards.
-However, it changes only html parser. If You wish to store records different from default content, You need to add also `@domain/{Model}` and `@infrastructure/storage/mongo/repository/{ModelRepository}` and their usage.
 ## Usage
 ```
 cp .env.dist .env

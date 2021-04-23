@@ -1,0 +1,52 @@
+{
+  "content": {
+    "selector": ".article",
+    "fields": [
+      {
+        "field": "id",
+        "attribute": "data-content-id",
+        "selector": null
+      },
+      {
+        "field": "title",
+        "selector": ".article-title>a",
+        "attribute": null
+      },
+      {
+        "field": "commentsCount",
+        "selector": ".article-title-comments-count>span",
+        "attribute": null
+      },
+      {
+        "field": "url",
+        "selector": ".article-title>a",
+        "attribute": "href"
+      },
+      {
+        "field": "publishedAt",
+        "selector": ".article-time",
+        "attribute": "data-date"
+      },
+      {
+        "field": "image",
+        "selector": "img.article-image",
+        "attribute": "src"
+      },
+      {
+        "field": "rate",
+        "selector": ".article-action>vote",
+        "attribute": "score"
+      },
+      {
+        "field": "category",
+        "selector": ".article-category",
+        "attribute": null
+      },
+      {
+        "field": "categoryUrl",
+        "selector": ".article-category",
+        "attribute": "href"
+      }
+    ]
+  }
+}

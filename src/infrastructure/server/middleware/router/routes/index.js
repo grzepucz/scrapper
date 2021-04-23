@@ -1,3 +1,4 @@
 const api = require('./api');
+const purge = require('./purge');
 
-module.exports = { api };
+module.exports = { api, purge };

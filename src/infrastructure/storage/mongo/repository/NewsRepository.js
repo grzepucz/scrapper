@@ -1,4 +1,4 @@
-const Article = require('@domain/Article/Article');
+const News = require('@domain/News/News');
 const Raven = require('raven');
 const Connector = require('../Connector');
 
@@ -9,10 +9,10 @@ const handleError = (error) => {
     throw error;
 };
 
-class ArticleRepository {
+class NewsRepository {
     static saveOne(data) {
         return Connector.getConnection()
-            .then(() => Article.findOneAndUpdate({ id: data.id }, data, { upsert: true, useFindAndModify: false }))
+            .then(() => News.findOneAndUpdate({ id: data.id }, data, { upsert: true, useFindAndModify: false }))
             .catch((error) => handleError(error));
     }
 
@@ -21,8 +21,8 @@ class ArticleRepository {
             .then(() => {
                 if (Array.isArray(data) && data.length) {
                     data.forEach((element) => {
-                        Article.findOneAndUpdate({ id: element.id }, element, { upsert: true, useFindAndModify: false })
-                            .then(() => console.log('Article appended.'));
+                        News.findOneAndUpdate({ id: element.id }, element, { upsert: true, useFindAndModify: false })
+                            .then(() => console.log('News appended.'));
                     });
                 }
             })
@@ -31,9 +31,9 @@ class ArticleRepository {
 
     static getAll() {
         return Connector.getConnection()
-            .then(() => Article.find())
+            .then(() => News.find())
             .catch((error) => handleError(error));
     }
 }
 
-module.exports = ArticleRepository;
+module.exports = NewsRepository;

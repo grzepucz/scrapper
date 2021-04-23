@@ -1,0 +1,72 @@
+{
+  "content": {
+    "domain": "https://www.meczyki.pl",
+    "fields": [
+      {
+        "field": "id",
+        "selector": "id"
+      },
+      {
+        "field": "title",
+        "selector": "title"
+      },
+      {
+        "field": "category",
+        "selector": "competition_name"
+      },
+      {
+        "field": "url",
+        "selector": "url"
+      },
+      {
+        "field": "thumbnail",
+        "selector": "img_small",
+        "parse": "addDomainToUrl"
+      },
+      {
+        "field": "subscribersCount",
+        "selector": "subscribes_count"
+      },
+      {
+        "field": "description",
+        "selector": "description"
+      },
+      {
+        "field": "commentsCount",
+        "selector": "comments_count"
+      },
+      {
+        "field": "publishedAt",
+        "selector": "added_datetime",
+        "parse": "overwriteDate"
+      },
+      {
+        "field": "authors",
+        "selector": "authors",
+        "subfields": [
+          {
+            "field": "name",
+            "selector": "name"
+          },
+          {
+            "field": "surname",
+            "selector": "surname"
+          },
+          {
+            "field": "twitter",
+            "selector": "twitter_url"
+          },
+          {
+            "field": "fb",
+            "selector": "fb_url"
+          },
+          {
+            "field": "url",
+            "selector": "url",
+            "parse": "addDomainToUrl"
+          }
+        ]
+      }
+    ]
+  }
+}

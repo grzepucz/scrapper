@@ -1,34 +1,15 @@
-const { parse, valid } = require('node-html-parser');
-const Raven = require('raven');
-const { env } = require('process');
-const config = require('./config/config.json');
+const Parser = require('../Parser');
+const config = require('./config.json');
 
-const DEFAULT = 'default';
-
-const getConfig = () => {
-    try {
-        return config[env.PAGE_PARSER || DEFAULT];
-    } catch (error) {
-        Raven.captureException(error);
-        return error;
-    }
-};
-
-class ArticleParser {
-    addScrappedSignature(element) {
-        return {
-            ...element,
-            scrappedAt: new Date(),
-        };
-    }
-
+class ArticleParser extends Parser {
     /**
      *
-     * @param root HTMLElement
+     * @param root
+     * @returns {*[]}
      */
     scrapContentType(root) {
         const result = [];
-        const { content: { selector: articleSelector, fields } } = getConfig();
+        const { content: { selector: articleSelector, fields } } = config;
         const contentNodes = root.querySelectorAll(articleSelector);
 
         if (contentNodes && fields) {
@@ -59,23 +40,6 @@ class ArticleParser {
         }
 
         return result;
-    }
-
-    /**
-     *
-     * @param payload string
-     */
-    parseHTML(payload) {
-        return new Promise((resolve) => {
-            if (valid(payload)) {
-                const root = parse(payload);
-                const data = this.scrapContentType(root);
-
-                resolve(data);
-            } else {
-                resolve(null);
-            }
-        }).then((data) => data);
     }
 }
 

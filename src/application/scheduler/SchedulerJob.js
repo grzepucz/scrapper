@@ -2,18 +2,31 @@ const nodeSchedule = require('node-schedule');
 const Raven = require('raven');
 const { env } = require('process');
 const SurferJob = require('../surfer/SurferJob');
+const PurgerJob = require('../purger/PurgerJob');
 
-const DEFAULT_SCHEDULE = '*/5 */12 * * *';
+const DEFAULT_SCHEDULE = '*/30 */2 * * *';
 
 const SurferJobConfig = {
     name: 'Surfer',
     ApplicationJob: SurferJob,
     schedule: env.SURFER_SCHEDULE || DEFAULT_SCHEDULE,
     callback: () => console.log(`Surfer scheduled: ${new Date().toJSON()}`),
-    paginationLimit: 10,
+    method: 'runWithPagination',
+    options: {
+        limit: 4,
+    },
 };
 
-const AVAILABLE_JOBS = [SurferJobConfig];
+const PurgerJobConfig = {
+    name: 'Purger',
+    ApplicationJob: PurgerJob,
+    schedule: env.PURGER_SCHEDULE || DEFAULT_SCHEDULE,
+    callback: () => console.log(`PurgerJob scheduled: ${new Date().toJSON()}`),
+    method: 'run',
+    options: {},
+};
+
+const AVAILABLE_JOBS = [SurferJobConfig, PurgerJobConfig];
 
 class SchedulerJob {
     constructor() {
@@ -23,12 +36,12 @@ class SchedulerJob {
     init() {
         AVAILABLE_JOBS.forEach((config) => {
             const {
-                name, ApplicationJob, schedule, callback, paginationLimit,
+                method, name, ApplicationJob, schedule, callback, options,
             } = config;
 
             nodeSchedule.scheduleJob(name, schedule, () => {
                 const job = new ApplicationJob();
-                job.runWithPagination(paginationLimit)
+                job[method](options)
                     .then((data) => this.runCallback(data, callback) && data)
                     .catch((error) => Raven.captureException(error));
             });

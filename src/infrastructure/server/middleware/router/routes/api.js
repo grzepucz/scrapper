@@ -7,11 +7,10 @@ module.exports = [
         handler: (req, res) => {
             const { limit } = req.query;
             const job = new SurferJob();
-            const jobData = limit && limit > 0 ? job.runWithPagination(limit) : job.run();
 
-            jobData.then((payload) => {
-                res.status(200).send(payload);
-            });
+            job.runWithPagination(limit)
+                .then((payload) => res.status(200).send(payload))
+                .catch((error) => res.status(500).send(error));
         },
     },
 ];
