@@ -10,7 +10,6 @@ const SurferJobConfig = {
     name: 'Surfer',
     ApplicationJob: SurferJob,
     schedule: env.SURFER_SCHEDULE || DEFAULT_SCHEDULE,
-    callback: () => console.log(`Surfer scheduled: ${new Date().toJSON()}`),
     method: 'runWithPagination',
     options: {
         limit: 4,
@@ -21,7 +20,6 @@ const PurgerJobConfig = {
     name: 'Purger',
     ApplicationJob: PurgerJob,
     schedule: env.PURGER_SCHEDULE || DEFAULT_SCHEDULE,
-    callback: () => console.log(`PurgerJob scheduled: ${new Date().toJSON()}`),
     method: 'run',
     options: {},
 };
@@ -39,13 +37,26 @@ class SchedulerJob {
                 method, name, ApplicationJob, schedule, callback, options,
             } = config;
 
-            nodeSchedule.scheduleJob(name, schedule, () => {
+            const worker = nodeSchedule.scheduleJob(name, schedule, () => {
                 const job = new ApplicationJob();
                 job[method](options)
                     .then((data) => this.runCallback(data, callback) && data)
                     .catch((error) => Raven.captureException(error));
+
+                console.log(`Finished ${name} | ${worker.triggeredJobs()}`);
             });
 
+            this.initSchedulerEvents(worker, config);
+        });
+    }
+
+    initSchedulerEvents(job, config) {
+        const { name, schedule } = config;
+        job.on('run', () => {
+            console.log(`${name} juz run...`);
+        });
+
+        job.on('scheduled', () => {
             console.log(`Scheduled ${name}: ${schedule}`);
         });
     }
@@ -54,6 +65,8 @@ class SchedulerJob {
         if (callback && typeof callback === 'function') {
             callback(data);
         }
+
+        return true;
     }
 
     getJobs() {

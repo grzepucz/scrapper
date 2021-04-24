@@ -27,10 +27,10 @@ class WriteFileHandler extends Handler {
 
                     child.on(EXIT_MESSAGE, (code) => {
                         console.log(`HDFS write process exited with code: ${code}`);
-                        resolve(true);
+                        resolve(code);
                     });
                 });
-        }).then(() => file);
+        }).then((code) => !code && file);
     }
 }
 

@@ -42,7 +42,7 @@ class SurferJob {
             .then((file) => new ScrapperJob({ file, parser, repository }).run());
     }
 
-    runWithPagination(limit = 3) {
+    runWithPagination({ limit = 3 }) {
         const promises = [];
         let counter = 1;
 
@@ -59,7 +59,7 @@ class SurferJob {
         }
 
         return Promise.all(promises)
-            .then(() => `Processed all ${limit} promises.`);
+            .then(() => promises);
     }
 }
 

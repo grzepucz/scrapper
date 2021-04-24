@@ -14,7 +14,7 @@ class HadoopFile {
     remove() {
         const self = this;
 
-        const removal = new Promise((resolve, reject) => {
+        return new Promise((resolve, reject) => {
             fs.unlink(this.sourcePath, (error) => {
                 if (error) {
                     Raven.captureException(error);
@@ -22,18 +22,16 @@ class HadoopFile {
                     reject(error);
                 } else {
                     console.log(`Removed from /_cache: ${self.sourcePath}`);
-                    resolve(true);
+                    resolve(self);
                 }
             });
-        });
-
-        return removal.then(() => self);
+        }).then((hadoopFile) => hadoopFile);
     }
 
     save() {
         const self = this;
 
-        const file = new Promise((resolve, reject) => {
+        return new Promise((resolve, reject) => {
             if (self.sourcePath && self.data) {
                 fs.appendFile(self.sourcePath, self.data, (error) => {
                     if (error) {
@@ -45,9 +43,7 @@ class HadoopFile {
                     resolve(self);
                 });
             }
-        });
-
-        return file.then(() => self);
+        }).then((hadoopFile) => hadoopFile);
     }
 
     generatePath(fileName) {
