@@ -4,12 +4,20 @@ const { env } = require('process');
 const Raven = require('raven');
 
 const CACHE_DIR_NAME = '_cache';
+const CSV_EXT = '.csv';
 
 class HadoopFile {
     constructor(fileName, data) {
         this.targetPath = this.generatePath(fileName);
         this.sourcePath = `${env.PWD}/${CACHE_DIR_NAME}/${this.targetPath}`;
         this.data = data;
+        this.domain = this.getDomain(fileName);
+    }
+
+    getDomain(fileName) {
+        const [, domain] = fileName.match(/:\/\/[a-z]{0,3}\.([a-zA-Z]*)/);
+        console.log(domain);
+        return domain;
     }
 
     convertToCsv(data) {
@@ -48,17 +56,18 @@ class HadoopFile {
 
         return new Promise((resolve, reject) => {
             self.convertToCsv(self.data).then((csv) => {
-                if (self.sourcePath) {
-                    fs.appendFile(self.sourcePath, (csv || self.data), (error) => {
-                        if (error) {
-                            Raven.captureException(error);
-                            console.error(error);
-                            reject(error);
-                        }
+                self.targetPath += CSV_EXT;
+                self.sourcePath += CSV_EXT;
 
-                        resolve(self);
-                    });
-                }
+                fs.appendFile(self.sourcePath, (csv || self.data), (error) => {
+                    if (error) {
+                        Raven.captureException(error);
+                        console.error(error);
+                        reject(error);
+                    }
+
+                    resolve(self);
+                });
             });
         }).then((hadoopFile) => hadoopFile);
     }

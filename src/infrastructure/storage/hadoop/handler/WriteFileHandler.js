@@ -11,26 +11,31 @@ const ERROR_MESSAGE = 'error';
 const EXIT_MESSAGE = 'exit';
 
 class WriteFileHandler extends Handler {
+    static buildTargetPath(namespace, domain, target) {
+        return `${namespace}${domain ? `/${domain}` : ''}/${target}`;
+    }
+
     /**
      * @param file HadoopFile
      */
     static handle(file) {
-        const { targetPath, sourcePath } = file;
+        const { targetPath, sourcePath, domain } = file;
 
         return new Promise((resolve, reject) => {
-            ProcessManager.spawn(COMMAND, [DFS, OPERATION, sourcePath, `${NAMESPACE}/${targetPath}`])
-                .then((child) => {
-                    console.log(`Saving ${targetPath}`);
-                    child.stderr.on(ERROR_MESSAGE, (code) => {
-                        console.error(code);
-                        reject(code);
-                    });
-
-                    child.on(EXIT_MESSAGE, (code) => {
-                        console.log(`HDFS write process exited with code: ${code}`);
-                        resolve(code);
-                    });
+            ProcessManager.spawn(
+                COMMAND, [DFS, OPERATION, sourcePath, WriteFileHandler.buildTargetPath(NAMESPACE, domain, targetPath)],
+            ).then((child) => {
+                console.log(`Saving ${targetPath}`);
+                child.stderr.on(ERROR_MESSAGE, (code) => {
+                    console.error(code);
+                    reject(code);
                 });
+
+                child.on(EXIT_MESSAGE, (code) => {
+                    console.log(`HDFS write process exited with code: ${code}`);
+                    resolve(code);
+                });
+            });
         }).then((code) => !code && file);
     }
 }
