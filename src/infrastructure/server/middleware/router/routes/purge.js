@@ -1,4 +1,4 @@
-const PurgerJob = require('@application/purger/PurgerJob');
+const { PurgerJob } = require('@application');
 
 module.exports = [
     {

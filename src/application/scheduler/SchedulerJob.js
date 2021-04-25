@@ -51,10 +51,6 @@ const AVAILABLE_JOBS = [...SurferJobConfigs, PurgerJobConfig];
 // const AVAILABLE_JOBS = [PurgerJobConfig];
 
 class SchedulerJob {
-    constructor() {
-        this.init();
-    }
-
     init() {
         AVAILABLE_JOBS.forEach((config) => {
             const {
@@ -95,4 +91,4 @@ class SchedulerJob {
     }
 }
 
-module.exports = new SchedulerJob();
+module.exports = SchedulerJob;

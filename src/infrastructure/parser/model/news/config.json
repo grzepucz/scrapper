@@ -8,11 +8,13 @@
       },
       {
         "field": "title",
-        "selector": "title"
+        "selector": "title",
+        "parse": "escapeComma"
       },
       {
         "field": "category",
-        "selector": "competition_name"
+        "selector": "competition_name",
+        "parse": "escapeComma"
       },
       {
         "field": "url",
@@ -29,7 +31,8 @@
       },
       {
         "field": "description",
-        "selector": "description"
+        "selector": "description",
+        "parse": "escapeComma"
       },
       {
         "field": "commentsCount",

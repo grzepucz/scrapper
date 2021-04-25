@@ -1,4 +1,4 @@
-const Article = require('@domain/Article/Article');
+const { Article } = require('@domain');
 const Raven = require('raven');
 const Connector = require('../Connector');
 

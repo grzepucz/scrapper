@@ -16,12 +16,17 @@ class HadoopFile {
 
     getDomain(fileName) {
         const [, domain] = fileName.match(/:\/\/[a-z]{0,3}\.([a-zA-Z]*)/);
-        console.log(domain);
         return domain;
     }
 
     convertToCsv(data) {
         return new Promise((resolve, reject) => {
+            const options = {
+                emptyFieldValue: 0,
+                expandArrayObjects: true,
+                prependHeader: false,
+                sortHeader: true,
+            };
             json2csv(data, (error, csv) => {
                 if (error) {
                     Raven.captureException(error);
@@ -30,7 +35,7 @@ class HadoopFile {
                 }
 
                 resolve(csv);
-            });
+            }, options);
         }).then((csv) => csv).catch((error) => Raven.captureException(error));
     }
 

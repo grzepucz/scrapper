@@ -36,7 +36,7 @@ class NewsParser extends Parser {
     }
 
     addDomainToUrl(url) {
-        return `${this.domain}${url}`;
+        return url ? `${this.domain}${url}` : null;
     }
 
     overwriteDate(date) {
@@ -51,10 +51,19 @@ class NewsParser extends Parser {
             .toJSON();
     }
 
+    escapeComma(element) {
+        return element.replace(/,/g, '2%C');
+    }
+
+    // @todo dry
     scrapSubfields({ subfields, record }) {
         const result = [];
 
         if (Array.isArray(record)) {
+            if (record.length === 0) {
+                record.push({});
+            }
+
             record.forEach((element) => {
                 const parsed = {};
 

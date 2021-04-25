@@ -2,5 +2,8 @@ require('module-alias/register');
 require('dotenv').config();
 
 require('@server/server');
-require('@sentry')();
-require('@application/scheduler/SchedulerJob');
+const setUpSentry = require('@sentry');
+const { SchedulerJob } = require('@application');
+
+setUpSentry();
+new SchedulerJob().init();

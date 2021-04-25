@@ -1,19 +1,16 @@
-const WebClient = require('@infrastructure/client/WebClient');
-const HadoopClient = require('@infrastructure/storage/hadoop/ClientProvider');
-const ArticleParser = require('@infrastructure/parser/model/article/ArticleParser');
-const ArticleRepository = require('@infrastructure/storage/mongo/repository/ArticleRepository');
-const NewsParser = require('@infrastructure/parser/model/news/NewsParser');
-const NewsRepository = require('@infrastructure/storage/mongo/repository/NewsRepository');
-const HadoopFile = require('@domain/HadoopFile/HadoopFile');
+const { HadoopFile } = require('@domain');
+const {
+    WebClient, ClientProvider, ArticleParser, ArticleRepository, NewsParser, NewsRepository,
+} = require('@infrastructure');
 const ScrapperJob = require('../scrapper/ScrapperJob');
 
 const DEFAULT = [
-    {
-        url: 'https://www.jbzd.com.pl/str',
-        parser: ArticleParser,
-        repository: ArticleRepository,
-        pagination: (href, page) => `${href}/${page}`,
-    },
+    // {
+    //     url: 'https://www.jbzd.com.pl/str',
+    //     parser: ArticleParser,
+    //     repository: ArticleRepository,
+    //     pagination: (href, page) => `${href}/${page}`,
+    // },
     {
         url: 'https://api.meczyki.pl/api/news/get-last-news-by-date?page=1',
         parser: NewsParser,
@@ -27,7 +24,7 @@ class SurferJob {
     constructor() {
         this.pages = DEFAULT;
         this.client = new WebClient();
-        this.hadoopHandler = HadoopClient.getClient(HADOOP_OP);
+        this.hadoopHandler = ClientProvider.getClient(HADOOP_OP);
     }
 
     run(page) {

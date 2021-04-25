@@ -1,5 +1,4 @@
 const { env } = require('process');
-const { path } = require('path');
 const ProcessManager = require('../process/ProcessManager');
 const Handler = require('./Handler');
 
@@ -13,6 +12,10 @@ const ERROR_MESSAGE = 'error';
 const DATA_MESSAGE = 'data';
 const EXIT_MESSAGE = 'exit';
 
+const MEMES_IN_CATEGORY_MR = 'MemesInCategory';
+const MOST_COMMENTED_NEWS_MR = 'MostCommentedNews';
+const REDUCE_OUTPUT = 'part-00000';
+
 class MapReduceHandler extends Handler {
     static buildInputPath(domain) {
         return `${NAMESPACE}${domain ? `/${domain}` : ''}`;
@@ -20,8 +23,10 @@ class MapReduceHandler extends Handler {
 
     static getJarByAction(action) {
         switch (action) {
-        case 'MemesInCategory':
-            return `${env.PWD}/${JAR_PATH}/MemesInCategory${JAR_EXT}`;
+        case MEMES_IN_CATEGORY_MR:
+            return `${env.PWD}/${JAR_PATH}/${MEMES_IN_CATEGORY_MR}${JAR_EXT}`;
+        case MOST_COMMENTED_NEWS_MR:
+            return `${env.PWD}/${JAR_PATH}/${MOST_COMMENTED_NEWS_MR}${JAR_EXT}`;
         default:
             return null;
         }
@@ -33,9 +38,11 @@ class MapReduceHandler extends Handler {
      */
     static handle(reducer) {
         const { domain, action } = reducer;
-        const outputDir = `${NAMESPACE}/${Math.random()}-${Date.now()}`;
+        const timestamp = Date.now();
+        const outputDir = `${NAMESPACE}/${timestamp}`;
 
         return new Promise((resolve, reject) => {
+            const chunks = [];
             ProcessManager.spawn(COMMAND, [JAR, MapReduceHandler.getJarByAction(action), MapReduceHandler.buildInputPath(domain), outputDir])
                 .then((child) => {
                     console.log('MapReduce');
@@ -45,17 +52,22 @@ class MapReduceHandler extends Handler {
                     });
 
                     child.stdout.on(DATA_MESSAGE, (chunk) => {
-                        console.log(chunk.toString());
+                        chunks.push(Buffer.from(chunk));
                     });
 
                     child.on(EXIT_MESSAGE, (code) => {
-                        // resolve(Buffer.concat(chunks).toString('utf8'));
+                        console.log(Buffer.concat(chunks).toString('utf8'));
                         console.log(`HDFS read process exited with code: ${code}`);
                         resolve(true);
                     });
                 });
-        }).then(() => outputDir);
+        }).then(() => timestamp);
     }
 }
 
-module.exports = MapReduceHandler;
+module.exports = {
+    MapReduceHandler,
+    MEMES_IN_CATEGORY_MR,
+    MOST_COMMENTED_NEWS_MR,
+    REDUCE_OUTPUT,
+};

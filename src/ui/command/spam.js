@@ -73,6 +73,6 @@ const spam = () => {
     }, Number.parseInt(interval, 10));
 };
 
-process.on('beforeExit', cleanAfterward);
+process.on(BEFORE_EXIT_EVENT, cleanAfterward);
 
 spam();
