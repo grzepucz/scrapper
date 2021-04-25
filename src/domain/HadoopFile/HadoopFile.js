@@ -64,16 +64,17 @@ class HadoopFile {
     }
 
     generatePath(fileName) {
-        const slugify = (text) => text.replace(/:/g, '-')
-            .replace(/https?.\/\//, '')
-            .replace(/\.+/g, '-')
-            .replace(/\/+/g, '-')
-            .replace(/[^(a-z0-9) -]/g, '')
-            .replace(/\s+/g, '-')
-            .replace(/-+/g, '-');
+        const slugify = (text) => {
+            const [domain] = text.replace(/:/g, '-')
+                .replace(/https?.\/\//, '')
+                .replace(/\.+/g, '-')
+                .split('/');
 
-        const date = new Date().toJSON().slice(0, 19);
-        return slugify(`${date.replace('T', '-')}-${fileName}`);
+            return domain.replace(/[^(a-z0-9) -]/g, '');
+        };
+
+        const date = new Date().toJSON().slice(0, 10);
+        return `${date}-${slugify(fileName)}`;
     }
 }
 

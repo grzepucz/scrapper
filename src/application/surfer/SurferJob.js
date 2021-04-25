@@ -38,8 +38,9 @@ class SurferJob {
             .then((response) => new ScrapperJob({ response, parser, repository })
                 .run().then((data) => new HadoopFile(url, data)))
             .then((data) => data.saveCsv())
-            .then((file) => self.hadoopHandler.handle(file));
-        // .then((file) => file.remove());
+            .then((file) => self.hadoopHandler.handle(file))
+            .then((file) => file.remove())
+            .then((file) => file);
     }
 
     runWithPagination({ start = '1', limit = '1' }) {
@@ -60,7 +61,7 @@ class SurferJob {
         }
 
         return Promise.all(promises)
-            .then(() => promises);
+            .then((data) => data);
     }
 }
 
