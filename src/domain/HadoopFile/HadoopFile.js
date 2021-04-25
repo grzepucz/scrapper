@@ -1,4 +1,5 @@
 const fs = require('fs');
+const { json2csv } = require('json-2-csv');
 const { env } = require('process');
 const Raven = require('raven');
 
@@ -9,6 +10,20 @@ class HadoopFile {
         this.targetPath = this.generatePath(fileName);
         this.sourcePath = `${env.PWD}/${CACHE_DIR_NAME}/${this.targetPath}`;
         this.data = data;
+    }
+
+    convertToCsv(data) {
+        return new Promise((resolve, reject) => {
+            json2csv(data, (error, csv) => {
+                if (error) {
+                    Raven.captureException(error);
+                    console.log(error);
+                    reject(error);
+                }
+
+                resolve(csv);
+            });
+        }).then((csv) => csv).catch((error) => Raven.captureException(error));
     }
 
     remove() {
@@ -28,28 +43,31 @@ class HadoopFile {
         }).then((hadoopFile) => hadoopFile);
     }
 
-    save() {
+    saveCsv() {
         const self = this;
 
         return new Promise((resolve, reject) => {
-            if (self.sourcePath && self.data) {
-                fs.appendFile(self.sourcePath, self.data, (error) => {
-                    if (error) {
-                        Raven.captureException(error);
-                        console.error(error);
-                        reject(error);
-                    }
+            self.convertToCsv(self.data).then((csv) => {
+                if (self.sourcePath) {
+                    fs.appendFile(self.sourcePath, (csv || self.data), (error) => {
+                        if (error) {
+                            Raven.captureException(error);
+                            console.error(error);
+                            reject(error);
+                        }
 
-                    resolve(self);
-                });
-            }
+                        resolve(self);
+                    });
+                }
+            });
         }).then((hadoopFile) => hadoopFile);
     }
 
     generatePath(fileName) {
         const slugify = (text) => text.replace(/:/g, '-')
-            .replace(/^https?:\/\//, '')
+            .replace(/https?.\/\//, '')
             .replace(/\.+/g, '-')
+            .replace(/\/+/g, '-')
             .replace(/[^(a-z0-9) -]/g, '')
             .replace(/\s+/g, '-')
             .replace(/-+/g, '-');

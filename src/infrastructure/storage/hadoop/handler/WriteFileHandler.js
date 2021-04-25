@@ -20,6 +20,7 @@ class WriteFileHandler extends Handler {
         return new Promise((resolve, reject) => {
             ProcessManager.spawn(COMMAND, [DFS, OPERATION, sourcePath, `${NAMESPACE}/${targetPath}`])
                 .then((child) => {
+                    console.log(`Saving ${targetPath}`);
                     child.stderr.on(ERROR_MESSAGE, (code) => {
                         console.error(code);
                         reject(code);

@@ -21,6 +21,7 @@ class ReadFileHandler extends Handler {
             const chunks = [];
             ProcessManager.spawn(COMMAND, [DFS, OPERATION, `${NAMESPACE}/${path}`])
                 .then((child) => {
+                    console.log(`Reading ${NAMESPACE}/${path}`);
                     child.stderr.on(ERROR_MESSAGE, (code) => {
                         console.error(code);
                         reject(code);

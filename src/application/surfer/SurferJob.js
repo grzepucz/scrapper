@@ -9,7 +9,7 @@ const ScrapperJob = require('../scrapper/ScrapperJob');
 
 const DEFAULT = [
     {
-        url: 'https://www.jbzd.com.pl/top/dzien',
+        url: 'https://www.jbzd.com.pl/str',
         parser: ArticleParser,
         repository: ArticleRepository,
         pagination: (href, page) => `${href}/${page}`,
@@ -35,18 +35,19 @@ class SurferJob {
         const { url, parser, repository } = page;
 
         return new Promise((resolve) => resolve(self.client.getPage(url)))
-            .then((response) => new HadoopFile(url, response))
-            .then((file) => file.save())
-            .then((hadoopFile) => self.hadoopHandler.handle(hadoopFile))
-            .then((file) => file.remove())
-            .then((file) => new ScrapperJob({ file, parser, repository }).run());
+            .then((response) => new ScrapperJob({ response, parser, repository })
+                .run().then((data) => new HadoopFile(url, data)))
+            .then((data) => data.saveCsv())
+            .then((file) => self.hadoopHandler.handle(file));
+        // .then((file) => file.remove());
     }
 
-    runWithPagination({ limit = 3 }) {
+    runWithPagination({ start = '1', limit = '1' }) {
         const promises = [];
-        let counter = 1;
+        let counter = Number.parseInt(start, 10);
+        const max = Number.parseInt(limit, 10) + Number.parseInt(start, 10);
 
-        while (counter <= limit) {
+        while (counter < max) {
             DEFAULT.forEach((page) => {
                 const { url, pagination } = page;
                 const paginatedUrl = pagination(url, counter);

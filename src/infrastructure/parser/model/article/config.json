@@ -33,6 +33,16 @@
         "attribute": "src"
       },
       {
+        "field": "video",
+        "selector": "source",
+        "attribute": "src"
+      },
+      {
+        "field": "tags",
+        "selector": "tags.article-tags",
+        "attribute": "tags"
+      },
+      {
         "field": "rate",
         "selector": ".article-action>vote",
         "attribute": "score"

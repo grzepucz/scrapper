@@ -1,11 +1,12 @@
 {
   "name": "scrapper",
   "version": "1.0.0",
-  "main": "src/ui/app.js",
+  "main": "src/ui/web/app.js",
   "scripts": {
-    "start": "node src/ui/app.js",
+    "start": "node src/ui/web/app.js",
     "dev": "nodemon",
-    "lint": "eslint ."
+    "lint": "eslint .",
+    "spam": "node src/ui/command/spam.js"
   },
   "license": "MIT",
   "jest": {
@@ -26,6 +27,7 @@
   "dependencies": {
     "dotenv": "^8.2.0",
     "express": "^4.17.1",
+    "json-2-csv": "^3.10.3",
     "module-alias": "^2.2.2",
     "mongoose": "^5.12.4",
     "node-fetch": "^2.6.1",

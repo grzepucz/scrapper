@@ -6,15 +6,38 @@ const PurgerJob = require('../purger/PurgerJob');
 
 const DEFAULT_SCHEDULE = '*/30 */2 * * *';
 
-const SurferJobConfig = {
-    name: 'Surfer',
-    ApplicationJob: SurferJob,
-    schedule: env.SURFER_SCHEDULE || DEFAULT_SCHEDULE,
-    method: 'runWithPagination',
-    options: {
-        limit: 4,
+const SurferJobConfigs = [
+    {
+        name: 'Surfer 1-3',
+        ApplicationJob: SurferJob,
+        schedule: '1 * * * *',
+        method: 'runWithPagination',
+        options: {
+            start: 1,
+            limit: 3,
+        },
     },
-};
+    {
+        name: 'Surfer 4-6',
+        ApplicationJob: SurferJob,
+        schedule: '6 * * * *',
+        method: 'runWithPagination',
+        options: {
+            start: 4,
+            limit: 6,
+        },
+    },
+    {
+        name: 'Surfer 7-9',
+        ApplicationJob: SurferJob,
+        schedule: '11 * * * *',
+        method: 'runWithPagination',
+        options: {
+            start: 7,
+            limit: 9,
+        },
+    },
+];
 
 const PurgerJobConfig = {
     name: 'Purger',
@@ -24,7 +47,8 @@ const PurgerJobConfig = {
     options: {},
 };
 
-const AVAILABLE_JOBS = [SurferJobConfig, PurgerJobConfig];
+const AVAILABLE_JOBS = [...SurferJobConfigs, PurgerJobConfig];
+// const AVAILABLE_JOBS = [PurgerJobConfig];
 
 class SchedulerJob {
     constructor() {
@@ -52,9 +76,6 @@ class SchedulerJob {
 
     initSchedulerEvents(job, config) {
         const { name, schedule } = config;
-        job.on('run', () => {
-            console.log(`${name} juz run...`);
-        });
 
         job.on('scheduled', () => {
             console.log(`Scheduled ${name}: ${schedule}`);

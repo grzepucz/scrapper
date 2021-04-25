@@ -13,6 +13,7 @@ class NewsRepository {
     static saveOne(data) {
         return Connector.getConnection()
             .then(() => News.findOneAndUpdate({ id: data.id }, data, { upsert: true, useFindAndModify: false }))
+            .then(() => data)
             .catch((error) => handleError(error));
     }
 
@@ -26,12 +27,14 @@ class NewsRepository {
                     });
                 }
             })
+            .then(() => data)
             .catch((error) => handleError(error));
     }
 
     static getAll() {
         return Connector.getConnection()
             .then(() => News.find())
+            .then((data) => data)
             .catch((error) => handleError(error));
     }
 }

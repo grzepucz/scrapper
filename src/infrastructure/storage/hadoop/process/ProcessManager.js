@@ -3,7 +3,7 @@ const { EventEmitter } = require('events');
 const { spawn } = require('child_process');
 const ProcessListener = require('./ProcessListener');
 
-const CPUS_LIMIT = cpus().length - 1;
+const CPUS_LIMIT = 6;
 const EXIT_EVENT = 'exit';
 
 const current = [];
@@ -20,9 +20,10 @@ class ProcessManager extends EventEmitter {
             const popCallback = () => {
                 const parameters = ProcessListener.popFromHeap();
                 if (parameters) {
-                    ProcessListener.removeListener(ProcessListener.getPopEvent(), popCallback);
                     resolve(parameters && ProcessManager.spawn(...parameters));
                 }
+
+                ProcessListener.removeListener(ProcessListener.getPopEvent(), popCallback);
             };
 
             ProcessListener.addListener(ProcessListener.getPopEvent(), popCallback);

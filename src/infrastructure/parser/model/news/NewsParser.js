@@ -1,6 +1,33 @@
 const Parser = require('../Parser');
 const config = require('./config.json');
 
+const yesterday = 24 * 3600 * 1000;
+const theDayBefore = 48 * 3600 * 1000;
+
+const rearrangeDate = (date) => {
+    const [dd, mm, yyyy] = date.split('-');
+    return `${yyyy}-${mm}-${dd}`;
+};
+
+const formatDate = (date) => rearrangeDate(
+    date.replace(/^Dzisiaj$/g, new Date(Date.now()).toJSON().split('T')[0])
+        .replace(/^Wczoraj$/g, new Date(Date.now() - yesterday).toJSON().split('T')[0])
+        .replace(/^Przedwczoraj$/g, new Date(Date.now() - theDayBefore).toJSON().split('T')[0])
+        .replace(/ /g, '-')
+        .replace(/sty/g, '01')
+        .replace(/lut/g, '02')
+        .replace(/mar/g, '03')
+        .replace(/kwi/g, '04')
+        .replace(/maj/g, '05')
+        .replace(/cze/g, '06')
+        .replace(/lip/g, '07')
+        .replace(/sie/g, '08')
+        .replace(/wrz/g, '09')
+        .replace(/paź/g, '10')
+        .replace(/lis/g, '11')
+        .replace(/gru/g, '12'),
+);
+
 class NewsParser extends Parser {
     constructor() {
         super();
@@ -16,12 +43,12 @@ class NewsParser extends Parser {
         const dateLabelDelimiter = ' | ';
         const [prefix, time] = date.split(dateLabelDelimiter);
 
-        // Ugly as fuck... Change @TODO
-        const replaced = prefix.replace(/^Dzisiaj$/g, new Date(Date.now()).toJSON().split('T')[0])
-            .replace(/^Wczoraj$/g, new Date(Date.now() - 24 * 3600 * 1000).toJSON().split('T')[0])
-            .replace(/^Przedwczoraj$/g, new Date(Date.now() - 48 * 3600 * 1000).toJSON().split('T')[0]);
+        const replacementDate = new Date(Date.parse(prefix));
 
-        return `${replaced}T${time}`;
+        return new Date((replacementDate.toString() === 'Invalid Date')
+            ? `${formatDate(prefix)}T${time}`
+            : `${replacementDate.getFullYear()}-${replacementDate.getUTCMonth() + 1}-${replacementDate.getDate()}T${time}`)
+            .toJSON();
     }
 
     scrapSubfields({ subfields, record }) {
