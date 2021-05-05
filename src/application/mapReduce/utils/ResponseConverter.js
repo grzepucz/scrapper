@@ -21,7 +21,7 @@ class ResponseConverter {
             result.push(values);
         });
 
-        return result;
+        return ResponseConverter.sortByIndex(result, 1);
     }
 
     static sortByIndex(data, indexNumber = 1) {
@@ -29,7 +29,7 @@ class ResponseConverter {
             throw new ConverterError('Data is not an array');
         }
 
-        return data.sort((a, b) => Number.parseInt(a[indexNumber], 10) - Number.parseInt(b[indexNumber], 10));
+        return data.sort((a, b) => b[indexNumber] - a[indexNumber]);
     }
 }
 

@@ -32,7 +32,7 @@ class ArticleParser extends Parser {
                 const content = {};
 
                 fields.forEach(({ field, selector, attribute }) => {
-                    content[field] = extractValue({ attribute, selector, article });
+                    content[field] = extractValue({ attribute, selector, article }) || null;
                 });
 
                 result.push(this.addScrappedSignature(content));

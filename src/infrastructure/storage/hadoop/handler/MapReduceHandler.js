@@ -1,6 +1,13 @@
 const { env } = require('process');
-const ProcessManager = require('../process/ProcessManager');
+const Raven = require('raven');
+const {
+    ProcessManager,
+    ERROR_MESSAGE,
+    DATA_MESSAGE,
+    EXIT_MESSAGE,
+} = require('../process/ProcessManager');
 const Handler = require('./Handler');
+const InvalidActionError = require('../error/InvalidActionError');
 
 const JAR = 'jar';
 const JAR_EXT = '.jar';
@@ -8,13 +15,13 @@ const JAR_PATH = '/bin';
 const COMMAND = env.YARN_BIN || 'yarn';
 const NAMESPACE = env.HDFS_NAMESPACE || '/scrapper';
 
-const ERROR_MESSAGE = 'error';
-const DATA_MESSAGE = 'data';
-const EXIT_MESSAGE = 'exit';
-
 const MEMES_IN_CATEGORY_MR = 'MemesInCategory';
 const MOST_COMMENTED_NEWS_MR = 'MostCommentedNews';
-const REDUCE_OUTPUT = 'part-00000';
+
+const AVAILABLE_FILTERS = [
+    MEMES_IN_CATEGORY_MR,
+    MOST_COMMENTED_NEWS_MR,
+];
 
 class MapReduceHandler extends Handler {
     static buildInputPath(domain) {
@@ -22,14 +29,11 @@ class MapReduceHandler extends Handler {
     }
 
     static getJarByAction(action) {
-        switch (action) {
-        case MEMES_IN_CATEGORY_MR:
-            return `${env.PWD}/${JAR_PATH}/${MEMES_IN_CATEGORY_MR}${JAR_EXT}`;
-        case MOST_COMMENTED_NEWS_MR:
-            return `${env.PWD}/${JAR_PATH}/${MOST_COMMENTED_NEWS_MR}${JAR_EXT}`;
-        default:
-            return null;
+        if (!AVAILABLE_FILTERS.includes(action)) {
+            throw new InvalidActionError();
         }
+
+        return `${env.PWD}/${JAR_PATH}/${action}${JAR_EXT}`;
     }
 
     /**
@@ -43,9 +47,14 @@ class MapReduceHandler extends Handler {
 
         return new Promise((resolve, reject) => {
             const chunks = [];
-            ProcessManager.spawn(COMMAND, [JAR, MapReduceHandler.getJarByAction(action), MapReduceHandler.buildInputPath(domain), outputDir])
+            ProcessManager.spawn(
+                COMMAND,
+                [JAR, MapReduceHandler.getJarByAction(action), MapReduceHandler.buildInputPath(domain), outputDir],
+            )
                 .then((child) => {
-                    console.log('MapReduce');
+                    ProcessManager.debug(child);
+                    console.log(`Spawned reducing ${timestamp}`);
+                    const startTime = Date.now();
                     child.stderr.on(ERROR_MESSAGE, (code) => {
                         console.error(code);
                         reject(code);
@@ -57,17 +66,14 @@ class MapReduceHandler extends Handler {
 
                     child.on(EXIT_MESSAGE, (code) => {
                         console.log(Buffer.concat(chunks).toString('utf8'));
-                        console.log(`HDFS read process exited with code: ${code}`);
+                        console.log(`HDFS Map reduce process exited with code: ${code}.`);
+                        console.log(`Took: ${(Date.now() - startTime) / 1000}s`);
                         resolve(true);
                     });
                 });
-        }).then(() => timestamp);
+        }).then(() => timestamp)
+            .catch((error) => Raven.captureException(error));
     }
 }
 
-module.exports = {
-    MapReduceHandler,
-    MEMES_IN_CATEGORY_MR,
-    MOST_COMMENTED_NEWS_MR,
-    REDUCE_OUTPUT,
-};
+module.exports = MapReduceHandler;

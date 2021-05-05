@@ -8,15 +8,19 @@ const CSV_EXT = '.csv';
 
 class HadoopFile {
     constructor(fileName, data) {
-        this.targetPath = this.generatePath(fileName);
+        this.domain = HadoopFile.getDomain(fileName);
+        this.targetPath = HadoopFile.generatePath(fileName, this.domain);
         this.sourcePath = `${env.PWD}/${CACHE_DIR_NAME}/${this.targetPath}`;
         this.data = data;
-        this.domain = this.getDomain(fileName);
     }
 
-    getDomain(fileName) {
+    static getDir() {
+        return `${env.PWD}/${CACHE_DIR_NAME}`;
+    }
+
+    static getDomain(fileName) {
         const [, domain] = fileName.match(/:\/\/[a-z]{0,3}\.([a-zA-Z]*)/);
-        return domain;
+        return domain || fileName;
     }
 
     convertToCsv(data) {
@@ -63,8 +67,9 @@ class HadoopFile {
             self.convertToCsv(self.data).then((csv) => {
                 self.targetPath += CSV_EXT;
                 self.sourcePath += CSV_EXT;
+                self.dataCsv = `${csv}\n`;
 
-                fs.appendFile(self.sourcePath, (csv || self.data), (error) => {
+                fs.appendFile(self.sourcePath, self.dataCsv, (error) => {
                     if (error) {
                         Raven.captureException(error);
                         console.error(error);
@@ -77,18 +82,25 @@ class HadoopFile {
         }).then((hadoopFile) => hadoopFile);
     }
 
-    generatePath(fileName) {
+    static generatePath(fileName, domain) {
         const slugify = (text) => {
-            const [domain] = text.replace(/:/g, '-')
+            const [uri] = text.replace(/:/g, '-')
                 .replace(/https?.\/\//, '')
                 .replace(/\.+/g, '-')
                 .split('/');
 
-            return domain.replace(/[^(a-z0-9) -]/g, '');
+            return uri.replace(/[^(a-z0-9) -]/g, '')
+                .replace(domain, `#${domain}#`);
         };
 
-        const date = new Date().toJSON().slice(0, 10);
-        return `${date}-${slugify(fileName)}`;
+        const date = new Date().toJSON()
+            .slice(0, 10)
+            .replace(/:/g, '-')
+            .replace('T', '-');
+
+        const fileHash = Math.floor(Math.random() * 1000);
+
+        return `${date}-${slugify(fileName)}-${fileHash}`;
     }
 }
 

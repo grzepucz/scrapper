@@ -47,8 +47,8 @@ const PurgerJobConfig = {
     options: {},
 };
 
-const AVAILABLE_JOBS = [...SurferJobConfigs, PurgerJobConfig];
-// const AVAILABLE_JOBS = [PurgerJobConfig];
+// const AVAILABLE_JOBS = [...SurferJobConfigs, PurgerJobConfig];
+const AVAILABLE_JOBS = [PurgerJobConfig];
 
 class SchedulerJob {
     init() {

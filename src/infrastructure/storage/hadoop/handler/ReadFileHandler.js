@@ -1,15 +1,13 @@
 const { env } = require('process');
-const ProcessManager = require('../process/ProcessManager');
+const {
+    ProcessManager, ERROR_MESSAGE, DATA_MESSAGE, EXIT_MESSAGE,
+} = require('../process/ProcessManager');
 const Handler = require('./Handler');
 
 const DFS = 'dfs';
 const OPERATION = '-cat';
 const COMMAND = env.HDFS_BIN || 'hdfs';
 const NAMESPACE = env.HDFS_NAMESPACE || '/scrapper';
-
-const ERROR_MESSAGE = 'error';
-const DATA_MESSAGE = 'data';
-const EXIT_MESSAGE = 'exit';
 
 class ReadFileHandler extends Handler {
     /**
@@ -21,9 +19,9 @@ class ReadFileHandler extends Handler {
             const chunks = [];
             ProcessManager.spawn(COMMAND, [DFS, OPERATION, `${NAMESPACE}/${path}`])
                 .then((child) => {
+                    ProcessManager.debug(child);
                     console.log(`Reading ${NAMESPACE}/${path}`);
                     child.stderr.on(ERROR_MESSAGE, (code) => {
-                        console.error(code);
                         reject(code);
                     });
 
@@ -33,7 +31,7 @@ class ReadFileHandler extends Handler {
 
                     child.on(EXIT_MESSAGE, (code) => {
                         resolve(Buffer.concat(chunks).toString('utf8'));
-                        console.log(`HDFS read process exited with code: ${code}`);
+                        console.log(`HDFS read ${path} process exited with code: ${code}`);
                     });
                 });
         }).then((data) => data);

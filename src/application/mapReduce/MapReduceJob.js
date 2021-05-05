@@ -1,21 +1,19 @@
-const { MapReduceHandler, ReadFileHandler, REDUCE_OUTPUT } = require('@infrastructure');
+const Raven = require('raven');
+const { ClientProvider, MAP_REDUCE_OPERATION } = require('@infrastructure');
 const ResponseConverter = require('./utils/ResponseConverter');
 
 class MapReduceJob {
     constructor() {
-        this.mapReduceHandler = MapReduceHandler;
-        this.readFileHandler = ReadFileHandler;
+        this.mapReduceHandler = ClientProvider.getClient(MAP_REDUCE_OPERATION);
         this.converter = ResponseConverter;
     }
 
-    run(domain, action) {
+    run(parameters) {
         return new Promise((resolve) => {
-            this.mapReduceHandler.handle({ domain, action })
-                .then((fileHash) => this.readFileHandler.handle(`${fileHash}/${REDUCE_OUTPUT}`))
-                .then((data) => resolve(data));
-        })
-            .then((data) => this.converter.convert(data, {}))
-            .then((converted) => this.converter.sortByIndex(converted, 1));
+            this.mapReduceHandler.handle(parameters)
+                .then((fileHash) => resolve(fileHash));
+        }).then((data) => data)
+            .catch((error) => Raven.captureException(error));
     }
 }
 

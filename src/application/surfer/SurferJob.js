@@ -1,16 +1,16 @@
 const { HadoopFile } = require('@domain');
 const {
-    WebClient, ClientProvider, ArticleParser, ArticleRepository, NewsParser, NewsRepository,
+    WebClient, ClientProvider, ArticleParser, ArticleRepository, NewsParser, NewsRepository, WRITE_OPERATION,
 } = require('@infrastructure');
 const ScrapperJob = require('../scrapper/ScrapperJob');
 
 const DEFAULT = [
-    // {
-    //     url: 'https://www.jbzd.com.pl/str',
-    //     parser: ArticleParser,
-    //     repository: ArticleRepository,
-    //     pagination: (href, page) => `${href}/${page}`,
-    // },
+    {
+        url: 'https://www.jbzd.com.pl/str',
+        parser: ArticleParser,
+        repository: ArticleRepository,
+        pagination: (href, page) => `${href}/${page}`,
+    },
     {
         url: 'https://api.meczyki.pl/api/news/get-last-news-by-date?page=1',
         parser: NewsParser,
@@ -18,13 +18,12 @@ const DEFAULT = [
         pagination: (href, page) => `${href.slice(0, href.length - 1)}${page}`,
     },
 ];
-const HADOOP_OP = 'write';
 
 class SurferJob {
     constructor() {
         this.pages = DEFAULT;
         this.client = new WebClient();
-        this.hadoopHandler = ClientProvider.getClient(HADOOP_OP);
+        this.hadoopHandler = ClientProvider.getClient(WRITE_OPERATION);
     }
 
     run(page) {
@@ -35,13 +34,13 @@ class SurferJob {
             .then((response) => new ScrapperJob({ response, parser, repository })
                 .run().then((data) => new HadoopFile(url, data)))
             .then((data) => data.saveCsv())
-            .then((file) => self.hadoopHandler.handle(file))
-            .then((file) => file.remove())
+            // .then((file) => file.remove())
             .then((file) => file);
     }
 
     runWithPagination({ start = '1', limit = '1' }) {
         const promises = [];
+        const self = this;
         let counter = Number.parseInt(start, 10);
         const max = Number.parseInt(limit, 10) + Number.parseInt(start, 10);
 
@@ -58,7 +57,7 @@ class SurferJob {
         }
 
         return Promise.all(promises)
-            .then((data) => data);
+            .then(() => self.hadoopHandler.handle(HadoopFile.getDir()));
     }
 }
 

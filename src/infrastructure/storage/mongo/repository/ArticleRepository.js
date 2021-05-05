@@ -12,7 +12,10 @@ const handleError = (error) => {
 class ArticleRepository {
     static saveOne(data) {
         return Connector.getConnection()
-            .then(() => Article.findOneAndUpdate({ id: data.id }, data, { upsert: true, useFindAndModify: false }))
+            .then(() => Article.findOneAndUpdate({ id: data.id }, data, {
+                upsert: true,
+                useFindAndModify: false,
+            }))
             .then(() => data)
             .catch((error) => handleError(error));
     }
@@ -21,10 +24,10 @@ class ArticleRepository {
         return Connector.getConnection()
             .then(() => {
                 if (Array.isArray(data) && data.length) {
-                    data.forEach((element) => {
-                        Article.findOneAndUpdate({ id: element.id }, element, { upsert: true, useFindAndModify: false })
-                            .then(() => console.log('Article appended.'));
-                    });
+                    data.forEach((element) => Article.findOneAndUpdate({ id: element.id }, element, {
+                        upsert: true,
+                        useFindAndModify: false,
+                    }));
                 }
             })
             .then(() => data)

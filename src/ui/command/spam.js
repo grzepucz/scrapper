@@ -36,7 +36,7 @@ const cleanAfterward = () => new Promise((resolve) => fetch(purgerEndpoint).then
     console.log('Cleaned.');
     resolve(response);
 })).then((response) => response).then(() => {
-    process.off('beforeExit', cleanAfterward);
+    process.off(BEFORE_EXIT_EVENT, cleanAfterward);
     process.exit(0);
 });
 

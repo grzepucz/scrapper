@@ -21,7 +21,8 @@
     "ignore": [
       "**/__tests__/**",
       "*.test.js",
-      "*.spec.js"
+      "*.spec.js",
+      "**/command/**"
     ]
   },
   "dependencies": {

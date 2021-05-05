@@ -55,7 +55,6 @@ class NewsParser extends Parser {
         return element.replace(/,/g, '2%C');
     }
 
-    // @todo dry
     scrapSubfields({ subfields, record }) {
         const result = [];
 

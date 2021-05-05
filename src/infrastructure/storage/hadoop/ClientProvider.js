@@ -1,9 +1,11 @@
+const MapReduceHandler = require('./handler/MapReduceHandler');
 const ReadFileHandler = require('./handler/ReadFileHandler');
 const WriteFileHandler = require('./handler/WriteFileHandler');
 const InvalidActionError = require('./error/InvalidActionError');
 
 const READ_OPERATION = 'read';
 const WRITE_OPERATION = 'write';
+const MAP_REDUCE_OPERATION = 'mapreduce';
 
 class ClientProvider {
     static getClient(operation) {
@@ -12,10 +14,17 @@ class ClientProvider {
             return ReadFileHandler;
         case WRITE_OPERATION:
             return WriteFileHandler;
+        case MAP_REDUCE_OPERATION:
+            return MapReduceHandler;
         default:
             throw new InvalidActionError();
         }
     }
 }
 
-module.exports = ClientProvider;
+module.exports = {
+    ClientProvider,
+    READ_OPERATION,
+    WRITE_OPERATION,
+    MAP_REDUCE_OPERATION,
+};
