@@ -1,6 +1,12 @@
 const HandlerNotImplementedError = require('../error/HandlerNotImplementedError');
 
+/**
+ *
+ */
 class Handler {
+    /**
+     *
+     */
     static handle() {
         if (this === Handler) {
             throw new HandlerNotImplementedError();
@@ -11,6 +17,9 @@ class Handler {
         }
     }
 
+    /**
+     *
+     */
     static spawnProcess() {
         if (this === Handler) {
             throw new HandlerNotImplementedError();
@@ -21,6 +30,9 @@ class Handler {
         }
     }
 
+    /**
+     *
+     */
     constructor() {
         if (this.constructor === Handler) {
             throw new HandlerNotImplementedError();
@@ -33,10 +45,16 @@ class Handler {
         }
     }
 
+    /**
+     *
+     */
     handle() {
         throw new HandlerNotImplementedError();
     }
 
+    /**
+     *
+     */
     spawnProcess() {
         throw new HandlerNotImplementedError();
     }

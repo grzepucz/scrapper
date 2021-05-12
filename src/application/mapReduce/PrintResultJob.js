@@ -2,14 +2,29 @@ const { ClientProvider, READ_OPERATION } = require('@infrastructure');
 const Raven = require('raven');
 const ResponseConverter = require('./utils/ResponseConverter');
 
+/**
+ * hadoop map-reduce output file
+ * @type {string}
+ */
 const REDUCE_OUTPUT = 'part-00000';
 
+/**
+ *
+ */
 class PrintResultJob {
+    /**
+     *
+     */
     constructor() {
         this.readFileHandler = ClientProvider.getClient(READ_OPERATION);
         this.converter = ResponseConverter;
     }
 
+    /**
+     *
+     * @param fileHash
+     * @returns {Promise<*>}
+     */
     run({ fileHash }) {
         const filePath = `${fileHash}/${REDUCE_OUTPUT}`;
         const result = new Promise((resolve) => {

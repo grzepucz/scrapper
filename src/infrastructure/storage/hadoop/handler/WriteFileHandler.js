@@ -13,7 +13,17 @@ const OPERATION = '-appendToFile';
 const COMMAND = env.HDFS_BIN || 'hdfs';
 const NAMESPACE = env.HDFS_NAMESPACE || '/scrapper';
 
+/**
+ *
+ */
 class WriteFileHandler extends Handler {
+    /**
+     *
+     * @param namespace
+     * @param domain
+     * @param target
+     * @returns {string}
+     */
     static buildTargetPath(namespace, domain, target) {
         return `${namespace}${domain ? `/${domain}` : ''}/${target}`;
     }
@@ -25,6 +35,11 @@ class WriteFileHandler extends Handler {
     static handleDir(dirName) {
         const domains = [];
 
+        /**
+         *
+         * @param filteredFiles
+         * @param outStream
+         */
         const mergeFiles = (filteredFiles, outStream) => {
             for (let iterator = 0; iterator < filteredFiles.length; iterator++) {
                 fs.createReadStream(`${dirName}/${filteredFiles[iterator]}`).pipe(outStream);
@@ -43,6 +58,11 @@ class WriteFileHandler extends Handler {
             }
         };
 
+        /**
+         *
+         * @param domainNames
+         * @param files
+         */
         const writeDir = (domainNames, files) => {
             for (let iterator = 0; iterator < domainNames.length; iterator++) {
                 const domain = domainNames[iterator];
@@ -76,6 +96,11 @@ class WriteFileHandler extends Handler {
         });
     }
 
+    /**
+     *
+     * @param file
+     * @returns {Promise<unknown>}
+     */
     static handleFile(file) {
         const { targetPath, sourcePath, domain } = file;
 

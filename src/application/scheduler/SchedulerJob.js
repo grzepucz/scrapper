@@ -6,6 +6,10 @@ const PurgerJob = require('../purger/PurgerJob');
 
 const DEFAULT_SCHEDULE = '*/30 */2 * * *';
 
+/**
+ *
+ * @type {({schedule: string, ApplicationJob: SurferJob, method: string, name: string, options: {start: number, limit: number}}|{schedule: string, ApplicationJob: SurferJob, method: string, name: string, options: {start: number, limit: number}}|{schedule: string, ApplicationJob: SurferJob, method: string, name: string, options: {start: number, limit: number}})[]}
+ */
 const SurferJobConfigs = [
     {
         name: 'Surfer 1-3',
@@ -39,6 +43,10 @@ const SurferJobConfigs = [
     },
 ];
 
+/**
+ *
+ * @type {{schedule: (*|string), ApplicationJob: PurgerJob, method: string, name: string, options: {}}}
+ */
 const PurgerJobConfig = {
     name: 'Purger',
     ApplicationJob: PurgerJob,
@@ -48,9 +56,19 @@ const PurgerJobConfig = {
 };
 
 // const AVAILABLE_JOBS = [...SurferJobConfigs, PurgerJobConfig];
+/**
+ *
+ * @type {{schedule: (*|string), ApplicationJob: PurgerJob, method: string, name: string, options: {}}[]}
+ */
 const AVAILABLE_JOBS = [PurgerJobConfig];
 
+/**
+ *
+ */
 class SchedulerJob {
+    /**
+     *
+     */
     init() {
         AVAILABLE_JOBS.forEach((config) => {
             const {
@@ -70,6 +88,11 @@ class SchedulerJob {
         });
     }
 
+    /**
+     *
+     * @param job
+     * @param config
+     */
     initSchedulerEvents(job, config) {
         const { name, schedule } = config;
 
@@ -78,6 +101,12 @@ class SchedulerJob {
         });
     }
 
+    /**
+     *
+     * @param data
+     * @param callback
+     * @returns {boolean}
+     */
     runCallback(data, callback) {
         if (callback && typeof callback === 'function') {
             callback(data);
@@ -86,6 +115,10 @@ class SchedulerJob {
         return true;
     }
 
+    /**
+     *
+     * @returns {{}}
+     */
     getJobs() {
         return nodeSchedule.scheduledJobs;
     }

@@ -2,9 +2,20 @@ const fs = require('fs');
 const path = require('path');
 const { env } = require('process');
 
+/**
+ * Cache dir path
+ * @type {string}
+ */
 const CACHE_DIR_PATH = `${env.PWD}/${env.CACHE_DIR}`;
 
+/**
+ *
+ */
 class PurgerJob {
+    /**
+     *
+     * @returns {Promise<unknown>}
+     */
     run() {
         return new Promise((resolve, reject) => {
             fs.readdir(CACHE_DIR_PATH, (err, files) => {

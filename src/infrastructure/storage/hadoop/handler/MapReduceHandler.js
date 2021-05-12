@@ -23,11 +23,24 @@ const AVAILABLE_FILTERS = [
     MOST_COMMENTED_NEWS_MR,
 ];
 
+/**
+ *
+ */
 class MapReduceHandler extends Handler {
+    /**
+     *
+     * @param domain
+     * @returns {string}
+     */
     static buildInputPath(domain) {
         return `${NAMESPACE}${domain ? `/${domain}` : ''}`;
     }
 
+    /**
+     *
+     * @param action
+     * @returns {string}
+     */
     static getJarByAction(action) {
         if (!AVAILABLE_FILTERS.includes(action)) {
             throw new InvalidActionError();

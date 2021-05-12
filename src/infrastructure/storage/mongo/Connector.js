@@ -7,12 +7,22 @@ const NOT_INIT_CONNECTION_STATUS = 99;
 
 const ERROR_EVENT = 'error';
 
+/**
+ *
+ */
 class MongoConnection {
+    /**
+     *
+     */
     constructor() {
         this.mongooseUrl = `${env.MONGO_PROTOCOL}://${env.MONGO_USER}:${env.MONGO_PASSWORD}@${env.MONGO_HOST}/${env.MONGO_DB}?retryWrites=true&w=majority`;
         this.connection = null;
     }
 
+    /**
+     *
+     * @returns {number|"closed"|"closing"|"connecting"|"open"|ActiveX.XmlDocumentReadyState|"ended"|"live"|ActiveX.XslProcessorReadyState|"complete"|"interactive"|"loading"|"closed"|"ended"|"open"|"done"|"pending"}
+     */
     getCurrentConnectionState() {
         if (!this.connection) {
             return DISCONNECTED_STATUS;
@@ -21,6 +31,10 @@ class MongoConnection {
         return this.connection.readyState || DISCONNECTED_STATUS;
     }
 
+    /**
+     *
+     * @returns {Promise<unknown>}
+     */
     getConnection() {
         const state = this.getCurrentConnectionState();
         const checkConnectionStatus = (status) => (status === DISCONNECTED_STATUS || status === NOT_INIT_CONNECTION_STATUS);
@@ -48,6 +62,10 @@ class MongoConnection {
         });
     }
 
+    /**
+     *
+     * @returns {Promise<unknown>}
+     */
     getConnectionMongo() {
         const self = this;
         return new Promise((resolve, reject) => {

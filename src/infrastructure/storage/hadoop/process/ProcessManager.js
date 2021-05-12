@@ -11,14 +11,29 @@ const EXIT_MESSAGE = 'exit';
 
 const current = [];
 
+/**
+ *
+ */
 class ProcessManager extends EventEmitter {
+    /**
+     *
+     * @returns {boolean}
+     */
     static canSpawn() {
         return current.length <= CPUS_LIMIT;
     }
 
+    /**
+     *
+     * @param child
+     */
     static debug(child) {
         const channels = [child, child.stderr, child.stdout];
 
+        /**
+         *
+         * @param channel
+         */
         const initListeners = (channel) => {
             const chunks = [];
 
@@ -41,6 +56,11 @@ class ProcessManager extends EventEmitter {
         channels.forEach((channel) => initListeners(channel));
     }
 
+    /**
+     *
+     * @param args
+     * @returns {Promise<*>}
+     */
     static pushAndWait(...args) {
         ProcessListener.addToHeap(...args);
 
@@ -59,6 +79,11 @@ class ProcessManager extends EventEmitter {
         }).then((child) => child);
     }
 
+    /**
+     *
+     * @param args
+     * @returns {Promise<*>}
+     */
     static spawn(...args) {
         const spawnProcess = (parameters) => {
             const child = spawn(...parameters);

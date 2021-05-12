@@ -15,7 +15,7 @@ module.exports = {
         'import/no-unresolved': [1, { caseSensitive: false }],
         'class-methods-use-this': [0, { exceptMethods: [] }],
         'no-plusplus': 0,
-        'max-len': ['error', {
+        'max-len': [1, {
             ignoreStrings: true, code: 120, ignoreUrls: true, tabWidth: 2,
         }],
     },

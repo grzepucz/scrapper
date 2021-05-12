@@ -6,7 +6,15 @@ const Raven = require('raven');
 const CACHE_DIR_NAME = '_cache';
 const CSV_EXT = '.csv';
 
+/**
+ *
+ */
 class HadoopFile {
+    /**
+     *
+     * @param fileName
+     * @param data
+     */
     constructor(fileName, data) {
         this.domain = HadoopFile.getDomain(fileName);
         this.targetPath = HadoopFile.generatePath(fileName, this.domain);
@@ -14,15 +22,29 @@ class HadoopFile {
         this.data = data;
     }
 
+    /**
+     *
+     * @returns {string}
+     */
     static getDir() {
         return `${env.PWD}/${CACHE_DIR_NAME}`;
     }
 
+    /**
+     *
+     * @param fileName
+     * @returns {*}
+     */
     static getDomain(fileName) {
         const domain = fileName.split('.')[1];
         return domain || fileName;
     }
 
+    /**
+     *
+     * @param data
+     * @returns {Promise<*>}
+     */
     convertToCsv(data) {
         return new Promise((resolve, reject) => {
             const options = {
@@ -43,6 +65,10 @@ class HadoopFile {
         }).then((csv) => csv).catch((error) => Raven.captureException(error));
     }
 
+    /**
+     *
+     * @returns {Promise<*>}
+     */
     remove() {
         const self = this;
 
@@ -60,6 +86,10 @@ class HadoopFile {
         }).then((hadoopFile) => hadoopFile);
     }
 
+    /**
+     *
+     * @returns {Promise<*>}
+     */
     saveCsv() {
         const self = this;
 
@@ -82,6 +112,12 @@ class HadoopFile {
         }).then((hadoopFile) => hadoopFile);
     }
 
+    /**
+     *
+     * @param fileName
+     * @param domain
+     * @returns {string}
+     */
     static generatePath(fileName, domain) {
         const slugify = (text) => {
             const [uri] = text.replace(/:/g, '-')

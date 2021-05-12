@@ -4,11 +4,21 @@ const config = require('./config.json');
 const yesterday = 24 * 3600 * 1000;
 const theDayBefore = 48 * 3600 * 1000;
 
+/**
+ *
+ * @param date
+ * @returns {string}
+ */
 const rearrangeDate = (date) => {
     const [dd, mm, yyyy] = date.split('-');
     return `${yyyy}-${mm}-${dd}`;
 };
 
+/**
+ *
+ * @param date
+ * @returns {string}
+ */
 const formatDate = (date) => rearrangeDate(
     date.replace(/^Dzisiaj$/g, new Date(Date.now()).toJSON().split('T')[0])
         .replace(/^Wczoraj$/g, new Date(Date.now() - yesterday).toJSON().split('T')[0])
@@ -28,17 +38,33 @@ const formatDate = (date) => rearrangeDate(
         .replace(/gru/g, '12'),
 );
 
+/**
+ *
+ */
 class NewsParser extends Parser {
+    /**
+     *
+     */
     constructor() {
         super();
         const { content: { domain } } = config;
         this.domain = domain;
     }
 
+    /**
+     *
+     * @param url
+     * @returns {string|null}
+     */
     addDomainToUrl(url) {
         return url ? `${this.domain}${url}` : null;
     }
 
+    /**
+     *
+     * @param date
+     * @returns {string}
+     */
     overwriteDate(date) {
         const dateLabelDelimiter = ' | ';
         const [prefix, time] = date.split(dateLabelDelimiter);
@@ -51,10 +77,21 @@ class NewsParser extends Parser {
             .toJSON();
     }
 
+    /**
+     *
+     * @param element
+     * @returns {*|void|string}
+     */
     escapeComma(element) {
         return element.replace(/,/g, '2%C');
     }
 
+    /**
+     *
+     * @param subfields
+     * @param record
+     * @returns {[]}
+     */
     scrapSubfields({ subfields, record }) {
         const result = [];
 
@@ -118,6 +155,11 @@ class NewsParser extends Parser {
         return result;
     }
 
+    /**
+     *
+     * @param payload
+     * @returns {Promise<unknown>}
+     */
     parseJSON(payload) {
         return new Promise((resolve) => {
             const data = this.scrapContentType(JSON.parse(payload));

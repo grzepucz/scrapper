@@ -1,6 +1,15 @@
 const ConverterError = require('../error/ConverterError');
 
+/**
+ *
+ */
 class ResponseConverter {
+    /**
+     *
+     * @param data
+     * @param options
+     * @returns {*}
+     */
     static convert(data, options) {
         const {
             rowSeparator = '\n',
@@ -24,6 +33,12 @@ class ResponseConverter {
         return ResponseConverter.sortByIndex(result, 1);
     }
 
+    /**
+     *
+     * @param data
+     * @param indexNumber
+     * @returns {*}
+     */
     static sortByIndex(data, indexNumber = 1) {
         if (!Array.isArray(data)) {
             throw new ConverterError('Data is not an array');

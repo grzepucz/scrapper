@@ -62,6 +62,9 @@ const DEFAULT = [
     ...ONLY_UFC,
 ];
 
+/**
+ *
+ */
 class SurferJob {
     constructor() {
         this.pages = DEFAULT;
@@ -69,6 +72,11 @@ class SurferJob {
         this.hadoopHandler = ClientProvider.getClient(WRITE_OPERATION);
     }
 
+    /**
+     *
+     * @param page
+     * @returns {Promise<*>}
+     */
     run(page) {
         const self = this;
         const { url, parser, repository } = page;
@@ -81,6 +89,12 @@ class SurferJob {
             .then((file) => file);
     }
 
+    /**
+     *
+     * @param start
+     * @param limit
+     * @returns {Promise<unknown[]>}
+     */
     runWithPagination({ start = '1', limit = '1' }) {
         const promises = [];
         const self = this;

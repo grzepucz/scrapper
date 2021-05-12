@@ -1,7 +1,15 @@
 const Parser = require('../Parser');
 const config = require('./config.json');
 
+/**
+ *
+ */
 class UfcParser extends Parser {
+    /**
+     *
+     * @param content
+     * @returns {string}
+     */
     prettify(content) {
         return content.trim()
             .replace(/\s+/g, ' ')
@@ -38,7 +46,7 @@ class UfcParser extends Parser {
                         Object.entries(fields).forEach(([index, field]) => {
                             content[field] = this.prettify(row.querySelectorAll('>span')[index].innerText);
                         });
-                        /**
+                        /*
                          * Weird magic for one case, when first rank has first total then value.
                          * Change somehow
                          */

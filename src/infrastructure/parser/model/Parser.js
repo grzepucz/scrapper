@@ -1,6 +1,11 @@
 const { parse, valid } = require('node-html-parser');
 const NotImplementedError = require('../error/NotImplementedError');
 
+/**
+ *
+ * @param data
+ * @returns {boolean|any}
+ */
 const isJSON = (data) => {
     try {
         return JSON.parse(data);
@@ -9,7 +14,15 @@ const isJSON = (data) => {
     }
 };
 
+/**
+ *
+ */
 class Parser {
+    /**
+     *
+     * @param element
+     * @returns {{scrappedAt: string}}
+     */
     addScrappedSignature(element) {
         return {
             ...element,
@@ -37,6 +50,11 @@ class Parser {
         }).then((data) => data);
     }
 
+    /**
+     *
+     * @param payload
+     * @returns {Promise<*>}
+     */
     parseJSON(payload) {
         return new Promise((resolve) => {
             const data = this.scrapContentType(JSON.parse(payload));
@@ -45,6 +63,11 @@ class Parser {
         }).then((data) => data);
     }
 
+    /**
+     *
+     * @param payload
+     * @returns {Promise<*>}
+     */
     parse(payload) {
         return new Promise((resolve, reject) => {
             if (isJSON(payload)) {

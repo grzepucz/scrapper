@@ -32,6 +32,10 @@ const getInputParameters = () => {
     return inputParameters;
 };
 
+/**
+ *
+ * @returns {Promise<void>}
+ */
 const cleanAfterward = () => new Promise((resolve) => fetch(purgerEndpoint).then((response) => {
     console.log('Cleaned.');
     resolve(response);
@@ -40,6 +44,9 @@ const cleanAfterward = () => new Promise((resolve) => fetch(purgerEndpoint).then
     process.exit(0);
 });
 
+/**
+ *
+ */
 const spam = () => {
     const parameters = getInputParameters();
 

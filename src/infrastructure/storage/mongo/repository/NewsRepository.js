@@ -2,6 +2,10 @@ const { News } = require('@domain');
 const Raven = require('raven');
 const Connector = require('../Connector');
 
+/**
+ *
+ * @param error
+ */
 const handleError = (error) => {
     console.error(error);
     Raven.captureException(error);
@@ -9,7 +13,15 @@ const handleError = (error) => {
     throw error;
 };
 
+/**
+ *
+ */
 class NewsRepository {
+    /**
+     *
+     * @param data
+     * @returns {Promise<* | void>}
+     */
     static saveOne(data) {
         return Connector.getConnection()
             .then(() => News.findOneAndUpdate({ id: data.id }, data, {
@@ -20,6 +32,11 @@ class NewsRepository {
             .catch((error) => handleError(error));
     }
 
+    /**
+     *
+     * @param data
+     * @returns {Promise<* | void>}
+     */
     static saveAll(data) {
         return Connector.getConnection()
             .then(() => {
@@ -34,6 +51,10 @@ class NewsRepository {
             .catch((error) => handleError(error));
     }
 
+    /**
+     *
+     * @returns {Promise<* | void>}
+     */
     static getAll() {
         return Connector.getConnection()
             .then(() => News.find())

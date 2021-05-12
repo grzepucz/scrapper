@@ -7,7 +7,15 @@ const READ_OPERATION = 'read';
 const WRITE_OPERATION = 'write';
 const MAP_REDUCE_OPERATION = 'mapreduce';
 
+/**
+ *
+ */
 class ClientProvider {
+    /**
+     *
+     * @param operation
+     * @returns {ReadFileHandler|WriteFileHandler|MapReduceHandler}
+     */
     static getClient(operation) {
         switch (operation) {
         case READ_OPERATION:

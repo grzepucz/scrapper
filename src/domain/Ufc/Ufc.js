@@ -2,6 +2,10 @@ const mongoose = require('mongoose');
 
 const UFC = 'ufc';
 
+/**
+ *
+ * @type {module:mongoose.Schema<Document, Model<any, any>, undefined>}
+ */
 const ufcSchema = new mongoose.Schema({
     group: {
         type: String,

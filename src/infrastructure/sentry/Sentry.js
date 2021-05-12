@@ -1,6 +1,9 @@
 const Raven = require('raven');
 const { env } = require('process');
 
+/**
+ *
+ */
 const initSentry = () => {
     if (env.SENTRY_ON === 'true') {
         const options = {

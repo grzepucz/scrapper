@@ -1,6 +1,9 @@
 const Parser = require('../Parser');
 const config = require('./config.json');
 
+/**
+ *
+ */
 class ArticleParser extends Parser {
     /**
      *

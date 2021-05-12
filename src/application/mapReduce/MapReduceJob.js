@@ -2,12 +2,23 @@ const Raven = require('raven');
 const { ClientProvider, MAP_REDUCE_OPERATION } = require('@infrastructure');
 const ResponseConverter = require('./utils/ResponseConverter');
 
+/**
+ *
+ */
 class MapReduceJob {
+    /**
+     *
+     */
     constructor() {
         this.mapReduceHandler = ClientProvider.getClient(MAP_REDUCE_OPERATION);
         this.converter = ResponseConverter;
     }
 
+    /**
+     *
+     * @param parameters
+     * @returns {Promise<*>}
+     */
     run(parameters) {
         return new Promise((resolve) => {
             this.mapReduceHandler.handle(parameters)

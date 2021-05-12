@@ -2,6 +2,10 @@ const mongoose = require('mongoose');
 
 const ARTICLE = 'article';
 
+/**
+ *
+ * @type {module:mongoose.Schema<Document, Model<any, any>, undefined>}
+ */
 const articleSchema = new mongoose.Schema({
     id: {
         type: Number,

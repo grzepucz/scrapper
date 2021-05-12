@@ -9,6 +9,9 @@ const OPERATION = '-cat';
 const COMMAND = env.HDFS_BIN || 'hdfs';
 const NAMESPACE = env.HDFS_NAMESPACE || '/scrapper';
 
+/**
+ *
+ */
 class ReadFileHandler extends Handler {
     /**
      *
