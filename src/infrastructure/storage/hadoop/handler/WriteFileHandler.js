@@ -25,6 +25,43 @@ class WriteFileHandler extends Handler {
     static handleDir(dirName) {
         const domains = [];
 
+        const mergeFiles = (filteredFiles, outStream) => {
+            for (let iterator = 0; iterator < filteredFiles.length; iterator++) {
+                fs.createReadStream(`${dirName}/${filteredFiles[iterator]}`).pipe(outStream);
+            }
+        };
+
+        /**
+         *
+         * @param files array
+         * @param mergeFile string
+         */
+        const flushOldData = (files, mergeFile, sourcePath) => {
+            if (files.includes(mergeFile)) {
+                fs.unlinkSync(sourcePath);
+            }
+        };
+
+        const writeDir = (domainNames, files) => {
+            for (let iterator = 0; iterator < domainNames.length; iterator++) {
+                const domain = domainNames[iterator];
+                const mergeFile = `${domain}.csv`;
+                const sourcePath = `${dirName}/${mergeFile}`;
+
+                flushOldData(files, mergeFile, sourcePath);
+                mergeFiles(
+                    files.filter((file) => file.indexOf(domain) > -1),
+                    fs.createWriteStream(sourcePath),
+                );
+
+                WriteFileHandler.handleFile({
+                    domain,
+                    sourcePath,
+                    targetPath: HadoopFile.generatePath(sourcePath, domain),
+                }).then(() => console.log(`${sourcePath} appended into ${domain}`));
+            }
+        };
+
         fs.readdir(dirName, (err, files) => {
             files.forEach((file) => {
                 const domain = file.split(DOMAIN_DELIMITER)[1];
@@ -34,28 +71,7 @@ class WriteFileHandler extends Handler {
                 }
             });
 
-            const unique = [...new Set(domains)];
-
-            unique.forEach((domain) => {
-                const sourcePath = `${dirName}/${domain}.csv`;
-                const outStream = fs.createWriteStream(sourcePath);
-
-                const filteredFiles = files.filter((file) => file.indexOf(domain) > -1);
-
-                for (let iterator = 0; iterator < filteredFiles.length; iterator++) {
-                    fs.createReadStream(`${dirName}/${filteredFiles[iterator]}`).pipe(outStream);
-                }
-                // files.filter((fileName) => fileName.indexOf(domain) > -1)
-                //     .forEach((fileName) => {
-                //         fs.createReadStream(`${dirName}/${fileName}`).pipe(outStream);
-                //     });
-
-                WriteFileHandler.handleFile({
-                    domain,
-                    sourcePath,
-                    targetPath: HadoopFile.generatePath(sourcePath, domain),
-                }).then(() => console.log(`${sourcePath} appended into ${domain}`));
-            });
+            writeDir([...new Set(domains)], files);
         });
     }
 
