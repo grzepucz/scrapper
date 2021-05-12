@@ -2,6 +2,9 @@
   "name": "scrapper",
   "version": "1.0.0",
   "main": "src/ui/web/app.js",
+  "author": {
+    "name": "Grzegorz Puczkowski"
+  },
   "scripts": {
     "start": "node src/ui/web/app.js",
     "dev": "nodemon",
@@ -10,9 +13,6 @@
     "doc": "jsdoc src -r -d docs"
   },
   "license": "MIT",
-  "jest": {
-    "testEnvironment": "node"
-  },
   "nodemonConfig": {
     "exec": "npm start",
     "watch": [
@@ -48,7 +48,6 @@
     "eslint-plugin-jasmine": "^4.1.2",
     "eslint-plugin-prettier": "^3.1.0",
     "eslint-plugin-protractor": "^2.1.1",
-    "jest": "^26.6.3",
     "jsdoc": "^3.6.6",
     "nodemon": "^2.0.7"
   },
