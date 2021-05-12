@@ -19,14 +19,14 @@ class HadoopFile {
     }
 
     static getDomain(fileName) {
-        const [, domain] = fileName.match(/:\/\/[a-z]{0,3}\.([a-zA-Z]*)/);
+        const domain = fileName.split('.')[1];
         return domain || fileName;
     }
 
     convertToCsv(data) {
         return new Promise((resolve, reject) => {
             const options = {
-                emptyFieldValue: 0,
+                emptyFieldValue: null,
                 expandArrayObjects: true,
                 prependHeader: false,
                 sortHeader: true,

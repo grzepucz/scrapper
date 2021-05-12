@@ -13,7 +13,7 @@ class Parser {
     addScrappedSignature(element) {
         return {
             ...element,
-            scrappedAt: new Date(),
+            scrappedAt: new Date().toJSON(),
         };
     }
 

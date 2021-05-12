@@ -1,8 +1,50 @@
 const { HadoopFile } = require('@domain');
 const {
-    WebClient, ClientProvider, ArticleParser, ArticleRepository, NewsParser, NewsRepository, WRITE_OPERATION,
+    WebClient,
+    ClientProvider,
+    ArticleParser,
+    ArticleRepository,
+    NewsParser,
+    NewsRepository,
+    UfcParser,
+    UfcRepository,
+    WRITE_OPERATION,
 } = require('@infrastructure');
 const ScrapperJob = require('../scrapper/ScrapperJob');
+
+const ONLY_UFC = [
+    {
+        url: 'http://statleaders.ufc.com/en/career',
+        parser: UfcParser,
+        repository: UfcRepository,
+        pagination: null,
+    },
+    {
+        url: 'http://statleaders.ufc.com/en/fight',
+        parser: UfcParser,
+        repository: UfcRepository,
+    },
+    {
+        url: 'http://statleaders.ufc.com/en/fight-comb',
+        parser: UfcParser,
+        repository: UfcRepository,
+    },
+    {
+        url: 'http://statleaders.ufc.com/en/round',
+        parser: UfcParser,
+        repository: UfcRepository,
+    },
+    {
+        url: 'http://statleaders.ufc.com/en/round-comb',
+        parser: UfcParser,
+        repository: UfcRepository,
+    },
+    {
+        url: 'http://statleaders.ufc.com/en/event',
+        parser: UfcParser,
+        repository: UfcRepository,
+    },
+];
 
 const DEFAULT = [
     {
@@ -17,6 +59,7 @@ const DEFAULT = [
         repository: NewsRepository,
         pagination: (href, page) => `${href.slice(0, href.length - 1)}${page}`,
     },
+    ...ONLY_UFC,
 ];
 
 class SurferJob {
@@ -45,12 +88,17 @@ class SurferJob {
         const max = Number.parseInt(limit, 10) + Number.parseInt(start, 10);
 
         while (counter < max) {
-            DEFAULT.forEach((page) => {
+            this.pages.forEach((page) => {
                 const { url, pagination } = page;
-                const paginatedUrl = pagination(url, counter);
-                const paginated = { ...page, url: paginatedUrl };
 
-                promises.push(this.run(paginated).then(() => console.log(`Processed: ${paginatedUrl}`)));
+                if (pagination) {
+                    const paginatedUrl = pagination(url, counter);
+                    const paginated = { ...page, url: paginatedUrl };
+
+                    promises.push(self.run(paginated).then(() => console.log(`Processed: ${paginatedUrl}`)));
+                } else if (counter <= start) {
+                    promises.push(self.run(page).then(() => console.log(`Processed: ${url}`)));
+                }
             });
 
             counter += 1;

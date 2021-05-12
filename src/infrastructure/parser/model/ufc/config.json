@@ -1,0 +1,19 @@
+{
+  "articleSelector": ".results-group",
+  "groupSelector": "header>h3",
+  "fieldsSelector": ".results-table--th>span",
+  "articleHeaderSelector": "results-table--th",
+  "articleRowSelector": ".results-table--tr",
+  "schema": {
+    "group": null,
+    "rnk": null,
+    "rnd": null,
+    "time": null,
+    "event": null,
+    "percent": null,
+    "fighter": null,
+    "fighters": null,
+    "total": null
+  },
+  "articleFirstRowSelector": "results-table--row-1"
+}
