@@ -35,6 +35,7 @@ class WriteFileHandler extends Handler {
          *
          * @param files array
          * @param mergeFile string
+         * @param sourcePath
          */
         const flushOldData = (files, mergeFile, sourcePath) => {
             if (files.includes(mergeFile)) {
