@@ -29,7 +29,8 @@ module.exports = [
         handler: (req, res) => {
             const { fileHash } = req.params;
             new PrintResultJob().run({ fileHash })
-                .then((payload) => res.status(200).send(payload))
+                .then((payload) => res.render('result', { payload }))
+                // .then((payload) => res.send(payload))
                 .catch((error) => res.status(500).send(error));
         },
     },

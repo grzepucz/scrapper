@@ -3,7 +3,7 @@ const { ClientProvider, MAP_REDUCE_OPERATION } = require('@infrastructure');
 const ResponseConverter = require('./utils/ResponseConverter');
 
 /**
- *
+ * Job to execute map reduce action
  */
 class MapReduceJob {
     /**
@@ -15,6 +15,7 @@ class MapReduceJob {
     }
 
     /**
+     * Method called to run job.
      *
      * @param parameters
      * @returns {Promise<*>}

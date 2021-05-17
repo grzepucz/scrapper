@@ -1,5 +1,5 @@
 /**
- *
+ * Error thrown by converter
  */
 class ConverterError extends Error {
     /**

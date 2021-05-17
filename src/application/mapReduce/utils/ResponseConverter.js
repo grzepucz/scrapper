@@ -1,10 +1,11 @@
 const ConverterError = require('../error/ConverterError');
 
 /**
- *
+ * Response converter class.
  */
 class ResponseConverter {
     /**
+     * Converts MapReduce output into JSON array.
      *
      * @param data
      * @param options
@@ -34,6 +35,7 @@ class ResponseConverter {
     }
 
     /**
+     * Sorts map reduce output by index
      *
      * @param data
      * @param indexNumber

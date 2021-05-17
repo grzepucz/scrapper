@@ -37,7 +37,8 @@
     "node-schedule": "^2.0.0",
     "process": "^0.11.10",
     "raven": "^2.6.4",
-    "webhdfs": "^1.2.0"
+    "webhdfs": "^1.2.0",
+    "twig": "~0.10.3"
   },
   "devDependencies": {
     "eslint": "^7.24.0",
