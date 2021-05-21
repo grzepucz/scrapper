@@ -21,26 +21,6 @@ const SurferJobConfigs = [
             limit: 3,
         },
     },
-    {
-        name: 'Surfer 4-6',
-        ApplicationJob: SurferJob,
-        schedule: '6 * * * *',
-        method: 'runWithPagination',
-        options: {
-            start: 4,
-            limit: 6,
-        },
-    },
-    {
-        name: 'Surfer 7-9',
-        ApplicationJob: SurferJob,
-        schedule: '11 * * * *',
-        method: 'runWithPagination',
-        options: {
-            start: 7,
-            limit: 9,
-        },
-    },
 ];
 
 /**
@@ -60,7 +40,8 @@ const PurgerJobConfig = {
  *
  * @type {{schedule: (*|string), ApplicationJob: PurgerJob, method: string, name: string, options: {}}[]}
  */
-const AVAILABLE_JOBS = [PurgerJobConfig];
+// const AVAILABLE_JOBS = [PurgerJobConfig];
+const AVAILABLE_JOBS = [];
 
 /**
  *

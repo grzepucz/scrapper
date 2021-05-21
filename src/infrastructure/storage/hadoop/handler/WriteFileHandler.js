@@ -64,6 +64,8 @@ class WriteFileHandler extends Handler {
          * @param files
          */
         const writeDir = (domainNames, files) => {
+            const promises = [];
+
             for (let iterator = 0; iterator < domainNames.length; iterator++) {
                 const domain = domainNames[iterator];
                 const mergeFile = `${domain}.csv`;
@@ -75,24 +77,30 @@ class WriteFileHandler extends Handler {
                     fs.createWriteStream(sourcePath),
                 );
 
-                WriteFileHandler.handleFile({
+                const promise = WriteFileHandler.handleFile({
                     domain,
                     sourcePath,
-                    targetPath: HadoopFile.generatePath(sourcePath, domain),
+                    targetPath: HadoopFile.generateDatePath(domain),
                 }).then(() => console.log(`${sourcePath} appended into ${domain}`));
+
+                promises.push(promise);
             }
+
+            return Promise.all(promises);
         };
 
-        fs.readdir(dirName, (err, files) => {
-            files.forEach((file) => {
-                const domain = file.split(DOMAIN_DELIMITER)[1];
+        return new Promise((resolve) => {
+            fs.readdir(dirName, (err, files) => {
+                files.forEach((file) => {
+                    const domain = file.split(DOMAIN_DELIMITER)[1];
 
-                if (domain) {
-                    domains.push(domain);
-                }
+                    if (domain) {
+                        domains.push(domain);
+                    }
+                });
+
+                resolve(writeDir([...new Set(domains)], files));
             });
-
-            writeDir([...new Set(domains)], files);
         });
     }
 

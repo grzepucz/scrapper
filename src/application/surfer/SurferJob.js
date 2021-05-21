@@ -11,6 +11,7 @@ const {
     WRITE_OPERATION,
 } = require('@infrastructure');
 const ScrapperJob = require('../scrapper/ScrapperJob');
+const PurgerJob = require('../purger/PurgerJob');
 
 const ONLY_UFC = [
     {
@@ -59,7 +60,7 @@ const DEFAULT = [
         repository: NewsRepository,
         pagination: (href, page) => `${href.slice(0, href.length - 1)}${page}`,
     },
-    ...ONLY_UFC,
+    // ...ONLY_UFC,
 ];
 
 /**
@@ -85,7 +86,6 @@ class SurferJob {
             .then((response) => new ScrapperJob({ response, parser, repository })
                 .run().then((data) => new HadoopFile(url, data)))
             .then((data) => data.saveCsv())
-            // .then((file) => file.remove())
             .then((file) => file);
     }
 
@@ -93,7 +93,7 @@ class SurferJob {
      *
      * @param start
      * @param limit
-     * @returns {Promise<unknown[]>}
+     * @returns {Promise<*>}
      */
     runWithPagination({ start = '1', limit = '1' }) {
         const promises = [];
@@ -119,7 +119,8 @@ class SurferJob {
         }
 
         return Promise.all(promises)
-            .then(() => self.hadoopHandler.handle(HadoopFile.getDir()));
+            .then(() => self.hadoopHandler.handle(HadoopFile.getDir()))
+            .then(() => new PurgerJob().run());
     }
 }
 

@@ -11,6 +11,7 @@ module.exports = [
                 status: 200,
                 message: payload,
             }))
+            .then(() => res.end())
             .catch((error) => res.status(500).send(error)),
     },
 ];

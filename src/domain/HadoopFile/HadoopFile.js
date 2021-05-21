@@ -48,7 +48,7 @@ class HadoopFile {
     convertToCsv(data) {
         return new Promise((resolve, reject) => {
             const options = {
-                emptyFieldValue: null,
+                emptyFieldValue: 'null',
                 expandArrayObjects: true,
                 prependHeader: false,
                 sortHeader: true,
@@ -137,6 +137,19 @@ class HadoopFile {
         const fileHash = Math.floor(Math.random() * 1000);
 
         return `${date}-${slugify(fileName)}-${fileHash}`;
+    }
+
+    /**
+     *
+     * @param fileName
+     * @param domain
+     * @returns {string}
+     */
+    static generateDatePath(domain) {
+        return `${new Date().toJSON()
+            .slice(0, 10)
+            .replace(/:/g, '-')
+            .replace('T', '-')}-${domain}`;
     }
 }
 

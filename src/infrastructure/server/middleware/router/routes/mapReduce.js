@@ -7,9 +7,13 @@ module.exports = [
         method: METHOD_GET,
         path: '/memes-categories',
         handler: (req, res) => {
-            const { domain, action } = req.query;
-            new MapReduceJob().run({ domain, action })
-                .then((fileHash) => res.redirect(`/mr/result/${fileHash}?domain=${domain}&action=${action}`))
+            const params = {
+                domain: 'jbzd',
+                action: 'MemesInCategory',
+            };
+
+            new MapReduceJob().run(params)
+                .then((fileHash) => res.redirect(`/mr/result/${fileHash}`))
                 .catch((error) => res.status(500).send(error));
         },
     },
@@ -17,9 +21,27 @@ module.exports = [
         method: METHOD_GET,
         path: '/football-comments',
         handler: (req, res) => {
-            const { domain, action } = req.query;
-            new MapReduceJob().run({ domain, action })
-                .then((fileHash) => res.redirect(`/mr/result/${fileHash}?domain=${domain}&action=${action}`))
+            const params = {
+                domain: 'meczyki',
+                action: 'MostCommentedNews',
+            };
+
+            new MapReduceJob().run(params)
+                .then((fileHash) => res.redirect(`/mr/result/${fileHash}`))
+                .catch((error) => res.status(500).send(error));
+        },
+    },
+    {
+        method: METHOD_GET,
+        path: '/ufc-leaders',
+        handler: (req, res) => {
+            const params = {
+                domain: 'ufc',
+                action: 'UFCLeaders',
+            };
+
+            new MapReduceJob().run(params)
+                .then((fileHash) => res.redirect(`/mr/result/${fileHash}`))
                 .catch((error) => res.status(500).send(error));
         },
     },
@@ -30,7 +52,6 @@ module.exports = [
             const { fileHash } = req.params;
             new PrintResultJob().run({ fileHash })
                 .then((payload) => res.render('result', { payload }))
-                // .then((payload) => res.send(payload))
                 .catch((error) => res.status(500).send(error));
         },
     },

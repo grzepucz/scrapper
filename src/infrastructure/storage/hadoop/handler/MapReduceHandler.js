@@ -11,16 +11,18 @@ const InvalidActionError = require('../error/InvalidActionError');
 
 const JAR = 'jar';
 const JAR_EXT = '.jar';
-const JAR_PATH = '/bin';
+const JAR_PATH = 'bin';
 const COMMAND = env.YARN_BIN || 'yarn';
 const NAMESPACE = env.HDFS_NAMESPACE || '/scrapper';
 
 const MEMES_IN_CATEGORY_MR = 'MemesInCategory';
 const MOST_COMMENTED_NEWS_MR = 'MostCommentedNews';
+const UFCLeaders = 'UFCLeaders';
 
 const AVAILABLE_FILTERS = [
     MEMES_IN_CATEGORY_MR,
     MOST_COMMENTED_NEWS_MR,
+    UFCLeaders,
 ];
 
 /**

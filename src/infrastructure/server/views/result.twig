@@ -1,0 +1,73 @@
+<html>
+<head>
+    <title>Map Reduce Result</title>
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+    <style>
+        .result-table {
+            margin: 15px 30px;
+            width: 90vw;
+            display: flex;
+            flex-direction: column;
+        }
+        .result-table__element {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: flex-start;
+            flex-direction: row;
+            border-bottom: 1px solid black;
+        }
+        .result-table__element:hover {
+            background: beige;
+        }
+        .col-1 {
+            margin: 10px;
+            width: 65vw;
+        }
+        .col-2 {
+            margin: 10px;
+            width: 20vw;
+            color: #454545;
+        }
+    </style>
+</head>
+<body>
+{% if payload is defined and payload is not empty %}
+    <div id="plot"></div>
+    <div class="result-table">
+        {% for item in payload %}
+            <div class="result-table__element">
+                <div class="col-1">{{ item[0] }}</div>
+                <div class="col-2">{{ item[1] }}</div>
+            </div>
+        {% endfor %}
+    </div>
+    <script>
+        var data = [
+            {
+                x: [],
+                y: [],
+                type: 'bar'
+            }
+        ];
+        {% for item in payload %}
+            data[0].x.push('{{ item[0] }}');
+            data[0].y.push('{{ item[1] }}');
+        {% endfor %}
+
+        Plotly.newPlot('plot', data, {
+            xaxis: {
+                tickangle: -30
+            },
+            yaxis: {
+                zeroline: false,
+                gridwidth: 2
+            },
+            bargap :0.05,
+            height: 800,
+        });
+    </script>
+{% else %}
+    <div>There is no result collected. May be caused by no data or some error.</div>
+{% endif %}
+</body>
+</html>
