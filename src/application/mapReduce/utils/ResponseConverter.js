@@ -46,7 +46,8 @@ class ResponseConverter {
             throw new ConverterError('Data is not an array');
         }
 
-        return data.sort((a, b) => b[indexNumber] - a[indexNumber]);
+        return data.filter((item) => item[0] !== null && item[0] !== 'null')
+            .sort((a, b) => Number.parseInt(b[indexNumber], 10) - Number.parseInt(a[indexNumber], 10));
     }
 }
 
